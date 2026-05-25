@@ -34,13 +34,13 @@ Gunakan alur berikut agar sinkron saat bekerja dalam kelompok:
 
 Pakai alur ini jika ingin langkah yang paling sederhana:
 
-### 1. Clone Project (Satu kali saja)
+#### 1. Clone Project (Satu kali saja)
 ```bash
 git clone https://github.com/Yogs4R/reservasi-studio.git
 cd reservasi-studio
 ```
 
-### 2. Alur git
+#### 2. Alur git
 
 ```bash
 git pull origin main
@@ -53,37 +53,37 @@ git push origin main
 
 Pakai alur ini jika bekerja dengan branch fitur agar perubahan lebih terkontrol.
 
-### 1. Clone project (Satu kali saja)
+#### 1. Clone project (Satu kali saja)
 ```bash
 git clone https://github.com/Yogs4R/reservasi-studio.git
 cd reservasi-studio
 ```
 
-### 2. Ambil perubahan terbaru dari branch utama
+#### 2. Ambil perubahan terbaru dari branch utama
 ```bash
 git checkout main
 git pull origin main
 ```
 
-### 3. Buat branch fitur atau branch tugas
+#### 3. Buat branch fitur atau branch tugas
 ```bash
 git checkout -b nama-branch-fitur
 ```
 
-### 4. Kerjakan perubahan lalu simpan ke Git
+#### 4. Kerjakan perubahan lalu simpan ke Git
 ```bash
 git add .
 git commit -m "Deskripsi perubahan"
 git push origin nama-branch-fitur
 ```
 
-### 5. Setelah selesai bekerja, kembali ke main dan sinkronkan lagi
+#### 5. Setelah selesai bekerja, kembali ke main dan sinkronkan lagi
 ```bash
 git checkout main
 git pull origin main
 ```
 
-### 6. Jika ada branch lain atau pekerjaan tim lain
+#### 6. Jika ada branch lain atau pekerjaan tim lain
 - Selalu jalankan `git pull origin main` sebelum mulai mengerjakan tugas baru.
 - Jika sudah pindah branch, pastikan status kerja bersih sebelum `checkout` ke branch lain.
 - Gunakan commit message yang jelas agar teman satu tim mudah memahami perubahan.
