@@ -30,7 +30,30 @@ Project web reservasi studio berbasis PHP Native.
 ## Alur Kolaborasi Git untuk Tim
 Gunakan alur berikut agar sinkron saat bekerja dalam kelompok:
 
-### 1. Clone project
+### Opsi A. Pemula
+
+Pakai alur ini jika ingin langkah yang paling sederhana:
+
+### 1. Clone Project (Satu kali saja)
+```bash
+git clone https://github.com/Yogs4R/reservasi-studio.git
+cd reservasi-studio
+```
+
+### 2. Alur git
+
+```bash
+git pull origin main
+git add .
+git commit -m "Deskripsi perubahan"
+git push origin main
+```
+
+### Opsi B. Advanced
+
+Pakai alur ini jika bekerja dengan branch fitur agar perubahan lebih terkontrol.
+
+### 1. Clone project (Satu kali saja)
 ```bash
 git clone https://github.com/Yogs4R/reservasi-studio.git
 cd reservasi-studio
