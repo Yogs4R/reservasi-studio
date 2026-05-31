@@ -1,3 +1,49 @@
+<?php
+	require '../../config/koneksi.php';
+
+	// Query dasar
+	$query = "
+	SELECT a.*, k.nama_kategori
+	FROM alat_media a
+	LEFT JOIN kategori k ON a.id_kategori = k.id_kategori
+	WHERE 1=1
+	";
+
+	// Filter search
+	if (!empty($_GET['search'])) {
+		$search = mysqli_real_escape_string($conn, $_GET['search']);
+		$query .= " AND a.nama_alat LIKE '%$search%'";
+	}
+
+	// Filter kategori
+	if (!empty($_GET['kategori'])) {
+		$kategori = (int)$_GET['kategori'];
+		$query .= " AND a.id_kategori = $kategori";
+	}
+
+	// Filter availability berdasarkan stok
+	if (!empty($_GET['availability'])) {
+		if ($_GET['availability'] == 'available') {
+			$query .= " AND a.stok > 0";
+		} elseif ($_GET['availability'] == 'unavailable') {
+			$query .= " AND a.stok <= 0";
+		}
+	}
+
+	// Filter berdasarkan kondisi
+	if (!empty($_GET['condition'])){
+		if($_GET['condition'] == 'Baik'){
+			$query .= "AND a.kondisi_alat = 'Baik' ";
+		}elseif($_GET['condition'] == 'Perlu Perawatan') {
+			$query .= "AND a.kondisi_alat = 'Perlu Perawatan' ";
+		}
+	}
+
+	$query .= " ORDER BY a.id_alat";
+
+	$hasil = mysqli_query($conn, $query);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,51 +78,82 @@
     </div>
 
 </div>
-	<!-- Search & Filters Toolbar -->
-	<div class="row g-2 mb-4">
+<!-- Search & Filters Toolbar -->
+	<form method="GET" class="row g-2 mb-4">
 
-    <div class="col-md-6">
-        <input
-            type="text"
-            class="form-control"
-            placeholder="Search equipment...">
-    </div>
+		<div class="col-md-5">
+			<input
+				type="text"
+				name="search"
+				class="form-control"
+				placeholder="Search equipment..."
+				value="<?= $_GET['search'] ?? '' ?>">
+		</div>
 
-    <div class="col-md-2">
-        <select class="form-select">
-            <option>All Categories</option>
-            <option>Cameras</option>
-            <option>Lenses</option>
-            <option>Lighting</option>
-            <option>Audio</option>
-        </select>
-    </div>
+		<div class="col-md-2">
+			<select name="kategori" class="form-select">
+				<option value="">All Categories</option>
 
-    <div class="col-md-2">
-        <select class="form-select">
-            <option>Availability</option>
-            <option>Available Now</option>
-            <option>Currently Rented</option>
-        </select>
-    </div>
+				<?php
+				$kategori = mysqli_query($conn, "SELECT * FROM kategori");
 
-    <div class="col-md-2">
-        <select class="form-select">
-            <option>Condition</option>
-            <option>Excellent</option>
-            <option>Good</option>
-            <option>Fair</option>
-        </select>
-    </div>
+				while ($k = mysqli_fetch_array($kategori)) {
+					$selected = (
+						isset($_GET['kategori']) &&
+						$_GET['kategori'] == $k['id_kategori']
+					) ? 'selected' : '';
 
-</div>
+					echo "
+					<option value='{$k['id_kategori']}' $selected>
+						{$k['nama_kategori']}
+					</option>";
+				}
+				?>
+			</select>
+		</div>
+
+		<div class="col-md-2">
+			<select name="availability" class="form-select">
+				<option value="">Availability</option>
+				<option value="available"
+					<?= ($_GET['availability'] ?? '') == 'available' ? 'selected' : '' ?>>
+					Available
+				</option>
+
+				<option value="unavailable"
+					<?= ($_GET['availability'] ?? '') == 'unavailable' ? 'selected' : '' ?>>
+					Unavailable
+				</option>
+			</select>
+		</div>
+
+		<div class="col-md-2">
+			<select name="condition" class="form-select">
+				<option value="">Condition</option>
+				<option value="Baik"
+					<?= ($_GET['condition'] ?? '') == 'Baik' ? 'selected' : '' ?>>
+					Baik
+				</option>
+
+				<option value="Perlu Perawatan"
+					<?= ($_GET['condition'] ?? '') == 'Perlu Perawatan' ? 'selected' : '' ?>>
+					Perlu Perawatan
+				</option>
+			</select>
+		</div>
+
+		<div class="col-md-1">
+			<button type="submit" class="btn btn-dark w-100">
+				Filter
+			</button>
+		</div>
+
+	</form>
 
 	<!-- Card Grid View -->
 	<div class="row g-3" id="view-cards">
 		<!-- card -->
 		<?php
-            require '../../config/koneksi.php';
-            $hasil = mysqli_query($conn, "SELECT alat_media.*, kategori.nama_kategori FROM alat_media JOIN kategori ON alat_media.id_kategori = kategori.id_kategori ORDER BY alat_media.id_alat");
                     
             $no = 1;
             while($data = mysqli_fetch_array($hasil)) { ?>
