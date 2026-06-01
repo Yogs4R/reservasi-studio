@@ -1,6 +1,5 @@
 <?php
-include '../../includes/header.php';
-?>
+include '../../includes/header.php'; ?>
     <div class="container pt-5 pb-4 mt-5">
         <div class="d-flex justify-content-between align-items-end border-bottom pb-3 mb-4">
 
@@ -16,6 +15,4 @@ include '../../includes/header.php';
         <div>ABCD</div>
         <div>ABCD</div>
     </div>
-<?php
-include '../../includes/footer.php';
-?>
+<?php include '../../includes/footer.php'; ?>
