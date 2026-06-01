@@ -1,8 +1,8 @@
 # Reservasi Studio
 
-[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![PHP](https://img.shields.io/badge/PHP-Native-777BB4?logo=php&logoColor=white)](https://www.php.net/)
-[![XAMPP](https://img.shields.io/badge/XAMPP-Setup-orange?logo=apache&logoColor=white)](https://www.apachefriends.org/)
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg?style=flat-square)](LICENSE)
+[![PHP](https://img.shields.io/badge/PHP-Native-777BB4?logo=php&logoColor=white&style=flat-square)](https://www.php.net/)
+[![XAMPP](https://img.shields.io/badge/XAMPP-Setup-orange?logo=apache&logoColor=white&style=flat-square)](https://www.apachefriends.org/)
 
 Project web reservasi studio berbasis PHP Native.
 
@@ -21,11 +21,11 @@ Project web reservasi studio berbasis PHP Native.
 
 ## Import Database di XAMPP
 1. Buka `http://localhost/phpmyadmin`.
-2. Buat database baru dengan nama `reservasi_db`.
+2. Buat database baru dengan nama `reservasi_studio`.
 3. Klik database tersebut, lalu pilih menu **Import**.
 4. Pilih file `database/reservasi_db.sql`.
 5. Klik **Go** untuk menjalankan import.
-6. Sesuaikan koneksi database di `config/database.php` jika username, password, atau nama database berbeda.
+6. Sesuaikan koneksi database di `config/koneksi.php` jika username, password, atau nama database berbeda.
 
 ## Alur Kolaborasi Git untuk Tim
 Gunakan alur berikut agar sinkron saat bekerja dalam kelompok:
@@ -91,7 +91,7 @@ git pull origin main
 ## Catatan Tambahan
 - File upload disimpan di `assets/img/uploads/`.
 - Folder tersebut tetap ada di repository lewat file `.gitkeep`, tetapi isi file upload diabaikan oleh Git.
-- File `database/reservasi_db.sql` masih kosong dan siap diisi struktur tabel saat database final sudah dibuat.
+- File `database/reservasi_db.sql` berisi struktur skema lengkap dan seed data awal (10 kategori, 20 alat, dan 2 akun pengguna uji coba).
 
 ## Struktur Folder dan Fungsi
 
@@ -106,7 +106,7 @@ reservasi-studio/                              # Root project
 │       └── uploads/                           # Folder khusus hasil upload dari user/admin
 │           └── .gitkeep                       # Penanda agar folder uploads tetap masuk Git
 ├── config/                                    # Konfigurasi inti aplikasi
-│   └── database.php                           # Skrip murni untuk koneksi ke MySQL/MariaDB
+│   └── koneksi.php                            # Skrip murni untuk koneksi ke MySQL/MariaDB
 ├── database/                                  # Database project
 │   └── reservasi_db.sql                       # File dump SQL yang berisi tabel awal (wajib ada!)
 ├── includes/                                  # Komponen UI yang dipakai berulang kali

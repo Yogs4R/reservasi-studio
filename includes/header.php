@@ -1,84 +1,99 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Calculate BASE_URL dynamically to prevent broken links
+$doc_root = str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT']);
+$root_dir = str_replace('\\', '/', dirname(__DIR__));
+
+$doc_root_clean = strtolower($doc_root);
+$root_dir_clean = strtolower($root_dir);
+
+if (strpos($root_dir_clean, $doc_root_clean) === 0) {
+    $relative_path = substr($root_dir, strlen($doc_root));
+} else {
+    $relative_path = '/reservasi-studio'; // Fallback
+}
+
+$base_url = '/' . ltrim(str_replace('\\', '/', $relative_path), '/') . '/';
+if ($base_url === '//') {
+    $base_url = '/';
+}
+if (!defined('BASE_URL')) {
+    define('BASE_URL', $base_url);
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reservasi Studio</title>
-    <!-- Local Bootstrap -->
-    <!-- <link rel="stylesheet" href="/assets/css/bootstrap.min.css"> -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <title>StudioHub</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap 5 CSS via CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- Bootstrap Icons via CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Local Style CSS using dynamic BASE_URL -->
+    <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/style.css">
 </head>
 <body>
-    <!-- <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/">Reservasi Studio</a>
-        </div>
-    </nav> -->
 
-    <nav class="navbar navbar-expand-md navbar-brutalist fixed-top">
-    <div class="container-fluid px-lg-5">
-
-        <!-- Logo -->
-        <a class="navbar-brand brand-logo m-0" href="#">
-            STUDIOHUB
-        </a>
-
-        <!-- Mobile Toggle -->
-        <button
-            class="navbar-toggler menu-btn"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarMenu">
-            <span class="material-symbols-outlined">
-                menu
-            </span>
-        </button>
-
-        <!-- Menu -->
-        <div class="collapse navbar-collapse justify-content-center" id="navbarMenu">
-            <ul class="navbar-nav gap-md-4">
-                <li class="nav-item">
-                    <a class="nav-link nav-link-custom" href="../kategori/index.php">Catalog</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link nav-link-custom nav-link-active" href="#">
-                        Studios
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link nav-link-custom" href="#">Equipment</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link nav-link-custom" href="#">Pricing</a>
-                </li>
-            </ul>
-
-            <!-- Right Buttons (Mobile) -->
-            <div class="d-md-none mt-3">
-                <button class="btn btn-link text-dark text-uppercase fw-bold text-decoration-none p-0 mb-2">
-                    Sign In
-                </button>
-                <br>
-                <button class="btn-brutalist">
-                    Book Now
-                </button>
+    <!-- Dynamic Simple & Elegant Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom fixed-top">
+        <div class="container-fluid px-lg-5">
+            <!-- Brand / Logo -->
+            <a class="navbar-brand fw-bold text-uppercase" href="<?= BASE_URL ?>index.php">
+                STUDIOHUB
+            </a>
+            
+            <!-- Toggler for mobile -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <!-- Navbar Links -->
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-lg-3">
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= BASE_URL ?>modules/kategori/index.php">Catalog</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= BASE_URL ?>index.php">Studios</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= BASE_URL ?>modules/alat/index.php">Equipment</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Pricing</a>
+                    </li>
+                </ul>
+                
+                <!-- Auth Section -->
+                <div class="d-flex align-items-center gap-3">
+                    <?php if (!isset($_SESSION['user_id'])): ?>
+                        <a href="<?= BASE_URL ?>modules/auth/login.php" class="btn btn-link text-decoration-none text-dark fw-bold text-uppercase p-0">LOG IN</a>
+                        <a href="<?= BASE_URL ?>modules/auth/register.php" class="btn btn-outline-dark fw-semibold text-uppercase px-3 py-1.5 btn-book-now">SIGN UP</a>
+                    <?php else: ?>
+                        <div class="dropdown">
+                            <button class="btn btn-outline-dark dropdown-toggle fw-semibold px-3" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <?= htmlspecialchars($_SESSION['nama']) ?>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="userDropdown">
+                                <li><a class="dropdown-menu-item dropdown-item fw-medium py-2" href="<?= BASE_URL ?>modules/reservasi/riwayat.php">My Bookings</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-menu-item dropdown-item text-danger fw-semibold py-2" href="<?= BASE_URL ?>modules/auth/logout.php">Logout</a></li>
+                            </ul>
+                        </div>
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
+    </nav>
 
-        <!-- Right Buttons (Desktop) -->
-        <div class="d-none d-md-flex align-items-center gap-3">
-            <button class="btn btn-link text-dark text-uppercase fw-bold text-decoration-none p-0">
-                Sign In
-            </button>
-
-            <button class="btn-brutalist">
-                Book Now
-            </button>
-        </div>
-
-    </div>
-</nav>
-
-<!-- jangan dihapus kode dibawah buat formatnya konsisten -->
-<div class="container mt-4"> 
+    <!-- Main Container Left Open -->
+    <div class="container mt-4">

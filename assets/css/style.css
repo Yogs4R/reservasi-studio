@@ -1,0 +1,54 @@
+/* StudioHub Custom Styles - Clean & Elegant */
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: #333333;
+    background-color: #f8f9fa;
+    padding-top: 70px; /* Offset for fixed-top navbar */
+}
+
+/* Navbar Enhancements */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    background-color: #ffffff !important;
+}
+
+.navbar-brand {
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #111111 !important;
+}
+
+.nav-link {
+    font-weight: 500;
+    color: #555555 !important;
+    transition: color 0.2s ease;
+}
+
+.nav-link:hover, .nav-link.active {
+    color: #0d6efd !important; /* Elegant Bootstrap primary blue */
+}
+
+/* Card custom styling */
+.card {
+    border: 1px solid #e3e6f0;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+.card-title {
+    font-weight: 600;
+    color: #2e3b4e;
+}
+
+/* Footer Styling */
+footer {
+    background-color: #ffffff;
+    border-top: 1px solid #dee2e6;
+    color: #6c757d;
+}

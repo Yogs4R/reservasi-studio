@@ -21,12 +21,12 @@ if (!empty($_GET['kategori'])) {
     $query .= " AND a.id_kategori = $kategori";
 }
 
-// Filter availability berdasarkan stok
+// Filter availability berdasarkan status_ketersediaan
 if (!empty($_GET['availability'])) {
     if ($_GET['availability'] == 'available') {
-        $query .= ' AND a.stok > 0';
+        $query .= " AND a.status_ketersediaan = 'Tersedia'";
     } elseif ($_GET['availability'] == 'unavailable') {
-        $query .= ' AND a.stok <= 0';
+        $query .= " AND a.status_ketersediaan != 'Tersedia'";
     }
 }
 
@@ -44,27 +44,16 @@ $query .= ' ORDER BY a.id_alat';
 $hasil = mysqli_query($conn, $query);
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>StudioHub - Equipment Catalog</title>
-	<!-- Material Symbols -->
-	<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
-
-	<style>
-		.card-img-top {
-			width: 100%;
-			height: 200px;
-			object-fit: contain;
-			background: #f8f9fa;
-		}
-	</style>
-</head>
-<body class="bg-light">
-
 <?php include '../../includes/header.php'; ?>
+<style>
+	.card-img-top {
+		width: 100%;
+		height: 200px;
+		object-fit: contain;
+		background: #f8f9fa;
+	}
+</style>
+
 
 <!-- Header Section -->
 <div class="container pt-5 pb-4 mt-5">
@@ -200,9 +189,4 @@ while ($data = mysqli_fetch_array($hasil)) { ?>
 ?>
 	</div>
 
-</div>
-
 <?php include '../../includes/footer.php'; ?>
-
-</body>
-</html>
