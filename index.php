@@ -6,7 +6,7 @@
     <title>Document</title>
 </head>
 <body>
-    <?php include 'includes/header.php' ?>
+    <?php include 'includes/header.php'; ?>
 
     <!-- template header -->
     <!-- Header Section -->
@@ -37,33 +37,38 @@
             </thead>
             <tbody>
                 <?php
-                    require './config/koneksi.php';
-                    $hasil = mysqli_query($conn, "SELECT * FROM alat_media ORDER BY id_alat");
-                    
-                    $no = 1;
-                    while($data = mysqli_fetch_array($hasil)) {
-                        echo "<tr>";
-                        echo "<th>" . $no . "</th>";
-                        echo "<td>" . $data['nama_alat'] . "</td>";
-                        // echo "<td>" . $data['desc_kategori'] . "</td>";                        
-                        
-                        
-                        // Kolom Aksi (Edit dan Delete)
-                        echo "<td style='text-align:center'>
-                                <a href='update.php?id_alat=" . $data['id_alat'] . "' class='btn btn-warning btn-sm' title='edit'>
+                require './config/koneksi.php';
+                $hasil = mysqli_query(
+                    $conn,
+                    'SELECT * FROM alat_media ORDER BY id_alat',
+                );
+
+                $no = 1;
+                while ($data = mysqli_fetch_array($hasil)) {
+                    echo '<tr>';
+                    echo '<th>' . $no . '</th>';
+                    echo '<td>' . $data['nama_alat'] . '</td>';
+                    // echo "<td>" . $data['desc_kategori'] . "</td>";
+
+                    // Kolom Aksi (Edit dan Delete)
+                    echo "<td style='text-align:center'>
+                                <a href='update.php?id_alat=" .
+                        $data['id_alat'] .
+                        "' class='btn btn-warning btn-sm' title='edit'>
                                     <i class='bi bi-pencil-square'></i>
                                 </a> 
-                                <a href='delete.php?id_alat=" . $data['id_alat'] . "' class='btn btn-danger btn-sm' title='hapus'>
+                                <a href='delete.php?id_alat=" .
+                        $data['id_alat'] .
+                        "' class='btn btn-danger btn-sm' title='hapus'>
                                     <i class='bi bi-trash'></i>
                                 </a>
                               </td>";
-                        echo "</tr>";
-                        $no++;
-                    }
+                    echo '</tr>';
+                    $no++;
+                }
                 ?>
             </tbody>
         </table>
-
-    <?php include 'includes/footer.php' ?>
+    <?php include 'includes/footer.php'; ?>
 </body>
 </html>

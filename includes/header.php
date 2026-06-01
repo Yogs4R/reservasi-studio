@@ -39,7 +39,7 @@
         <div class="collapse navbar-collapse justify-content-center" id="navbarMenu">
             <ul class="navbar-nav gap-md-4">
                 <li class="nav-item">
-                    <a class="nav-link nav-link-custom" href="#">Catalog</a>
+                    <a class="nav-link nav-link-custom" href="../kategori/index.php">Catalog</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link nav-link-custom nav-link-active" href="#">
