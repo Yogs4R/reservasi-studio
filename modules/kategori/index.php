@@ -7,7 +7,7 @@
 	FROM alat_media a
 	LEFT JOIN kategori k ON a.id_kategori = k.id_kategori
 	WHERE 1=1
-	";
+	"; 
 
 	// Filter search
 	if (!empty($_GET['search'])) {
@@ -33,9 +33,9 @@
 	// Filter berdasarkan kondisi
 	if (!empty($_GET['condition'])){
 		if($_GET['condition'] == 'Baik'){
-			$query .= "AND a.kondisi_alat = 'Baik' ";
+			$query .= " AND a.kondisi_alat = 'Baik' ";
 		}elseif($_GET['condition'] == 'Perlu Perawatan') {
-			$query .= "AND a.kondisi_alat = 'Perlu Perawatan' ";
+			$query .= " AND a.kondisi_alat = 'Perlu Perawatan' ";
 		}
 	}
 
@@ -70,14 +70,15 @@
 <div class="container pt-5 pb-4 mt-5">
 	<div class="d-flex justify-content-between align-items-end border-bottom pb-3 mb-4">
 
-    <div>
-        <h1 class="fw-bold mb-1">Equipment Catalog</h1>
-        <p class="text-muted mb-0">
-            Browse available equipment and creative assets.
-        </p>
-    </div>
-
+		<div>
+			<h1 class="fw-bold mb-1">Equipment Catalog</h1>
+			<p class="text-muted mb-0">
+				Browse available equipment and creative assets.
+			</p>
+		</div>
+	</div>
 </div>
+
 <!-- Search & Filters Toolbar -->
 	<form method="GET" class="row g-2 mb-4">
 
