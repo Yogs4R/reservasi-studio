@@ -1,3 +1,22 @@
-<?php include '../../includes/header.php'; ?>
-<h1>Create Alat</h1>
-<?php include '../../includes/footer.php'; ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <?php include '../../../includes/header.php'; ?>
+        <div class="container pt-5 pb-4 mt-5">
+            <div class="d-flex justify-content-between align-items-end border-bottom pb-3 mb-4">
+                <div>
+                    <h1 class="fw-bold mb-1">Tambah Item</h1>
+                    <p class="text-muted mb-0">
+                        Browse available equipment and creative assets.
+                    </p>
+                </div>
+            </div>
+        </div>
+    <?php include '../../../includes/footer.php'; ?>
+</body>
+</html>
