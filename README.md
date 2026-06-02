@@ -114,22 +114,23 @@ reservasi-studio/                              # Root project
 │   ├── footer.php                             # Tag penutup </body>, pemanggilan JS, dan Footer
 │   └── sidebar.php                            # Sidebar khusus untuk halaman Admin
 ├── modules/                                   # Core aplikasi yang dibagi berdasarkan entitas/fitur
+│   ├── admin/                                 # Panel admin khusus pengelola studio
+│   │   ├── index.php                          # Dashboard/halaman utama admin
+│   │   ├── kategori/                          # CRUD Kategori oleh admin
+│   │   │   └── index.php, create.php, etc.
+│   │   ├── produk/                            # CRUD Alat/Produk oleh admin
+│   │   │   └── index.php, create.php, etc.
+│   │   └── user/                              # Manajemen user oleh admin
 │   ├── auth/                                  # Modul autentikasi pengguna
 │   │   ├── login.php                          # Form login pengguna
 │   │   ├── register.php                       # Form pendaftaran akun pengguna
 │   │   └── logout.php                         # Proses keluar dari sesi login
-│   ├── user/                                  # Modul data pengguna
+│   ├── user/                                  # Modul data pengguna (khusus user)
 │   │   └── profil.php                         # Halaman profil pengguna untuk lihat/ubah data akun
-│   ├── alat/                                  # Modul data alat studio
-│   │   ├── index.php                          # Halaman list data alat
-│   │   ├── create.php                         # Form tambah alat baru
-│   │   ├── update.php                         # Form ubah data alat
-│   │   └── delete.php                         # Proses hapus data alat
-│   ├── kategori/                              # CRUD untuk Kategori
-│   │   ├── index.php                          # Daftar kategori
-│   │   ├── create.php                         # Form tambah kategori
-│   │   ├── update.php                         # Form ubah kategori
-│   │   └── delete.php                         # Proses hapus kategori
+│   ├── alat/                                  # Katalog alat studio (khusus user)
+│   │   └── index.php                          # Halaman list data alat
+│   ├── kategori/                              # Katalog kategori (khusus user)
+│   │   └── index.php                          # Daftar kategori
 │   ├── reservasi/                             # Modul pemesanan studio
 │   │   ├── form_booking.php                   # Form booking studio
 │   │   ├── proses_booking.php                 # Proses simpan booking
@@ -137,7 +138,7 @@ reservasi-studio/                              # Root project
 │   ├── pembayaran/                            # Modul pembayaran
 │   │   ├── upload_bukti.php                   # Upload bukti pembayaran
 │   │   └── verifikasi.php                     # Verifikasi pembayaran oleh admin
-│   └── laporan/                               # Modul laporan
+│   └── laporan/                               # Modul laporan (khusus admin)
 │       ├── index.php                          # Laporan dengan filter tanggal
 │       └── cetak_pdf.php                      # Proses cetak laporan ke PDF
 ├── .gitignore                                 # Daftar file/folder yang tidak boleh di-push ke repo

@@ -51,28 +51,8 @@ if (!defined('BASE_URL')) {
                 STUDIOHUB
             </a>
             
-            <!-- Toggler for mobile -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            
-            <!-- Navbar Links -->
-            <div class="collapse navbar-collapse" id="navbarContent">
-                <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-lg-3">
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?= BASE_URL ?>modules/kategori/index.php">Catalog</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?= BASE_URL ?>index.php">Studios</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?= BASE_URL ?>modules/alat/index.php">Equipment</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Pricing</a>
-                    </li>
-                </ul>
-                
+            <!-- Auth Section and Toggler Container -->
+            <div class="d-flex align-items-center gap-3 ms-auto ms-lg-0 order-lg-3">
                 <!-- Auth Section -->
                 <div class="d-flex align-items-center gap-3">
                     <?php if (!isset($_SESSION['user_id'])): ?>
@@ -91,6 +71,29 @@ if (!defined('BASE_URL')) {
                         </div>
                     <?php endif; ?>
                 </div>
+
+                <!-- Toggler for mobile -->
+                <button class="navbar-toggler ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+            
+            <!-- Navbar Links -->
+            <div class="collapse navbar-collapse order-lg-2" id="navbarContent">
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-lg-3">
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= BASE_URL ?>modules/kategori/index.php">Catalog</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= BASE_URL ?>index.php">Studios</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= BASE_URL ?>modules/alat/index.php">Equipment</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= BASE_URL ?>modules/pricing.php">Pricing</a>
+                    </li>
+                </ul>
             </div>
         </div>
     </nav>
