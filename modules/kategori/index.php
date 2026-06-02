@@ -56,7 +56,7 @@ $hasil = mysqli_query($conn, $query);
 
 
 <!-- Header Section -->
-<div class="container pt-5 pb-4 mt-5">
+<div class="container pb-4">
 	<div class="d-flex justify-content-between align-items-end border-bottom pb-3 mb-4">
 
 		<div>

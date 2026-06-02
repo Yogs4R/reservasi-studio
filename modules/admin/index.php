@@ -18,6 +18,7 @@
             </div>
         </div>
     </div>
+    <?php include '../../includes/sidebar.php'; ?>
     <div class="row g-2 mb-4">
         <div>ABCD</div>
         <div>ABCD</div>
