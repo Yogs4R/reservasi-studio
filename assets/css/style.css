@@ -53,246 +53,118 @@ footer {
     color: #6c757d;
 }
 
-/* Enhanced Hero Section */
-.hero-section {
-    background: radial-gradient(circle at 80% 20%, rgba(13, 110, 253, 0.12) 0%, rgba(0, 0, 0, 0) 50%),
-                radial-gradient(circle at 20% 80%, rgba(25, 135, 84, 0.08) 0%, rgba(0, 0, 0, 0) 50%),
-                #121212;
-    padding-top: 6rem;
-    padding-bottom: 6rem;
+/* Step Section Styles */
+.step-card {
+    border: none;
+    background: transparent;
 }
-
-.hero-title {
-    font-weight: 800;
-    letter-spacing: -0.5px;
-    background: linear-gradient(135deg, #ffffff 40%, #a3b8cc 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+.step-card:hover {
+    transform: none;
+    box-shadow: none;
 }
-
-/* Glassmorphism accent card */
-.glass-card {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(16px);
-    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
-}
-
-.glass-card:hover {
-    transform: translateY(-5px) rotate(1.5deg);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-}
-
-/* Dynamic Cards for popular products */
-.product-card {
-    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
-    border: 1px solid #eef1f6;
-    background-color: #ffffff;
-}
-
-.product-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.07);
-}
-
-.product-card .img-container {
-    height: 180px;
-    background: #f8f9fa;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    position: relative;
-}
-
-.product-card img {
-    max-height: 100%;
-    max-width: 100%;
-    object-fit: contain;
-    transition: transform 0.3s ease;
-}
-
-.product-card:hover img {
-    transform: scale(1.05);
-}
-
-/* How It Works Steps */
-.step-item {
-    position: relative;
-    padding: 2rem 1rem;
-    transition: transform 0.3s ease;
-}
-
-.step-item:hover {
-    transform: translateY(-4px);
-}
-
-.step-icon-wrapper {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    background-color: #ffffff;
-    border: 1px solid #eef1f6;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.8rem;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
-    margin-bottom: 1.5rem;
-    position: relative;
-}
-
 .step-number {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background: #111111;
-    color: #ffffff;
-    font-size: 0.75rem;
+    font-size: 2.5rem;
     font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    color: #212529;
+    line-height: 1;
+    margin-bottom: 0.75rem;
 }
 
-/* Testimonial Infinite Marquee */
+/* Marquee / Infinite Carousel Styles */
 .marquee-container {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-    width: 100%;
     overflow: hidden;
+    user-select: none;
     position: relative;
+    width: 100%;
     padding: 1rem 0;
 }
 
+/* Gradient overlays for smooth fading edges */
 .marquee-container::before,
 .marquee-container::after {
+    background: linear-gradient(to right, #f8f9fa 0%, rgba(248, 249, 250, 0) 100%);
     content: "";
-    position: absolute;
-    top: 0;
-    width: 15%;
     height: 100%;
+    position: absolute;
+    width: 100px;
     z-index: 2;
+    top: 0;
     pointer-events: none;
 }
-
 .marquee-container::before {
     left: 0;
-    background: linear-gradient(to right, #121212 0%, rgba(18, 18, 18, 0) 100%);
 }
-
 .marquee-container::after {
     right: 0;
-    background: linear-gradient(to left, #121212 0%, rgba(18, 18, 18, 0) 100%);
+    transform: rotateZ(180deg);
 }
 
 .marquee-track {
     display: flex;
     width: max-content;
-    gap: 1.25rem;
+    gap: 1.5rem;
 }
 
-.marquee-content {
-    display: flex;
-    gap: 1.25rem;
-    flex-shrink: 0;
-    will-change: transform;
+.marquee-left {
+    animation: scroll-left 35s linear infinite;
 }
 
-.testimonial-card {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 16px;
-    padding: 1.75rem;
-    width: 340px;
-    backdrop-filter: blur(12px);
-    transition: border-color 0.3s ease, background-color 0.3s ease;
+.marquee-right {
+    animation: scroll-right 35s linear infinite;
 }
 
-.testimonial-card:hover {
-    background: rgba(255, 255, 255, 0.06);
-    border-color: rgba(255, 255, 255, 0.15);
+.marquee-track:hover {
+    animation-play-state: paused;
 }
 
-.avatar-badge {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #0d6efd 0%, #198754 100%);
-    color: #ffffff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 0.9rem;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.avatar-badge.alt-color {
-    background: linear-gradient(135deg, #ffc107 0%, #dc3545 100%);
-}
-
-/* Animations */
 @keyframes scroll-left {
     0% {
         transform: translateX(0);
     }
     100% {
-        transform: translateX(calc(-50% - 0.625rem)); /* Half of the gap (1.25rem / 2) */
+        transform: translateX(-50%);
     }
 }
 
 @keyframes scroll-right {
     0% {
-        transform: translateX(calc(-50% - 0.625rem));
+        transform: translateX(-50%);
     }
     100% {
         transform: translateX(0);
     }
 }
 
-.marquee-left .marquee-content {
-    animation: scroll-left 40s linear infinite;
+.testimonial-card {
+    width: 320px;
+    flex-shrink: 0;
+    background: #ffffff;
+    border: 1px solid #e3e6f0;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.01);
 }
 
-.marquee-right .marquee-content {
-    animation: scroll-right 40s linear infinite;
-}
-
-.marquee-track:hover .marquee-content {
-    animation-play-state: paused;
-}
-
-/* FAQ Accordion Styling */
-.faq-accordion .accordion-item {
-    border: 1px solid #eef1f6;
-    border-radius: 12px !important;
-    margin-bottom: 1rem;
+/* Custom FAQ Accordion */
+.custom-accordion .accordion-item {
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    margin-bottom: 0.75rem;
     overflow: hidden;
 }
-
-.faq-accordion .accordion-button {
-    background-color: #ffffff;
-    color: #1a1a1a;
+.custom-accordion .accordion-button {
     font-weight: 600;
-    padding: 1.25rem 1.5rem;
-    box-shadow: none !important;
-}
-
-.faq-accordion .accordion-button:not(.collapsed) {
-    background-color: #f8f9fa;
-    color: #0d6efd;
-    border-bottom: 1px solid #eef1f6;
-}
-
-.faq-accordion .accordion-body {
+    color: #212529;
     background-color: #ffffff;
-    padding: 1.25rem 1.5rem;
-    color: #555555;
-    line-height: 1.6;
+    box-shadow: none;
+    transition: background-color 0.2s ease;
+}
+.custom-accordion .accordion-button:not(.collapsed) {
+    color: #212529;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+.custom-accordion .accordion-button:focus {
+    box-shadow: none;
 }
 

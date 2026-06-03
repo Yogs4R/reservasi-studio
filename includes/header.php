@@ -39,7 +39,7 @@ if (!defined('BASE_URL')) {
     <!-- Bootstrap Icons via CDN -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <!-- Local Style CSS using dynamic BASE_URL -->
-    <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/style.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/style.css?v=<?= time() ?>">
 </head>
 <body>
 
@@ -83,9 +83,6 @@ if (!defined('BASE_URL')) {
                 <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-lg-3">
                     <li class="nav-item">
                         <a class="nav-link" href="<?= BASE_URL ?>modules/kategori/index.php">Catalog</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?= BASE_URL ?>index.php">Studios</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="<?= BASE_URL ?>modules/alat/index.php">Equipment</a>
