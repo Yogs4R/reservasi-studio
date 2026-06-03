@@ -95,11 +95,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <div class="col-md-8 mb-4">
                     <label for="harga_produk" class="form-label">Masukkan Harga Produk :</label>
-                    <input type="text" name="harga_produk" class="form-control" placeholder="Harga Produk" required>
+                    <input type="number" name="harga_produk" class="form-control" placeholder="Harga Produk" required>
                 </div>
                 <div class="col-md-8 mb-4">
                     <label for="stok_produk" class="form-label">Masukkan Stok Produk :</label>
-                    <input type="text" name="stok_produk" class="form-control" placeholder="Stok Produk" required>
+                    <input type="number" name="stok_produk" class="form-control" placeholder="Stok Produk" required>
                 </div>
                 <div class="col-md-8 mb-4">
                     <label for="kondisi_produk" class="form-label">Masukkan Kondisi Produk :</label>
@@ -111,7 +111,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <div class="col-md-8 mb-4">
                     <label for="foto_produk" class="form-label">Masukkan Foto Produk :</label>
-                    <input type="file" name="foto_produk" class="form-control" required>
+                    
+                    <input type="file" name="foto_produk" id="foto_produk" class="form-control" accept="image/*" required>
+
+                    <!-- Preview image -->
+                    <img id="preview" src="#" alt="Preview Gambar"
+                        class="img-fluid mt-3 d-none"
+                        style="max-height: 250px; object-fit: contain;">
                 </div>
                 <div class="col-md-8 mb-4">
                     <label for="ketersediaan_produk" class="form-label">Ketersediaan Produk :</label>
@@ -128,5 +134,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </form>
         </div>
     <?php include '../../../includes/footer.php'; ?>
+    <script>
+    document.getElementById('foto_produk').addEventListener('change', function (event) {
+        const file = event.target.files[0];
+        const preview = document.getElementById('preview');
+
+        if (file) {
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+                preview.classList.remove('d-none');
+            };
+
+            reader.readAsDataURL(file);
+        } else {
+            preview.src = "#";
+            preview.classList.add('d-none');
+        }
+    });
+    </script>
 </body>
 </html>
