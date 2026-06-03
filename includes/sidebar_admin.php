@@ -3,12 +3,16 @@
 if (!defined('BASE_URL')) {
     $doc_root = str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT']);
     $root_dir = str_replace('\\', '/', dirname(__DIR__));
-    $relative_path = (strpos(strtolower($root_dir), strtolower($doc_root)) === 0) ? substr($root_dir, strlen($doc_root)) : '/reservasi-studio';
+    $relative_path =
+        strpos(strtolower($root_dir), strtolower($doc_root)) === 0
+            ? substr($root_dir, strlen($doc_root))
+            : '/reservasi-studio';
     $base_url = '/' . ltrim(str_replace('\\', '/', $relative_path), '/') . '/';
-    if ($base_url === '//') { $base_url = '/'; }
+    if ($base_url === '//') {
+        $base_url = '/';
+    }
     define('BASE_URL', $base_url);
-}
-?>
+} ?>
 <!-- Sidebar Admin Navigation -->
 <div class="card shadow-sm border border-light-subtle rounded-3 overflow-hidden bg-white mb-4">
     <div class="list-group list-group-flush">
@@ -27,7 +31,7 @@ if (!defined('BASE_URL')) {
         <a href="<?= BASE_URL ?>modules/admin/user/index.php" class="list-group-item list-group-item-action d-flex align-items-center gap-2 py-2.5">
             <i class="bi bi-people-fill text-secondary"></i> User Management
         </a>
-        <a href="<?= BASE_URL ?>modules/reservasi/riwayat.php" class="list-group-item list-group-item-action d-flex align-items-center gap-2 py-2.5">
+        <a href="<?= BASE_URL ?>modules/admin/reservasi/index.php" class="list-group-item list-group-item-action d-flex align-items-center gap-2 py-2.5">
             <i class="bi bi-calendar3 text-secondary"></i> Booking List
         </a>
         <a href="<?= BASE_URL ?>index.php" class="list-group-item list-group-item-action d-flex align-items-center gap-2 py-2.5 text-danger border-top">
