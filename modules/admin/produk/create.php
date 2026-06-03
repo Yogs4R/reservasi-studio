@@ -14,10 +14,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $kondisi_produk = $_POST['kondisi_produk'];
 
     $file = $_FILES['foto_produk'];
-    $originName = $file['name'];
-    $ext = pathinfo($originName, PATHINFO_EXTENSION);
-    $fileName = $originName . $ext;
-    $targetPath = $targetDir . $fileName;
+    $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
+
+    do {
+        $randomName = uniqid('foto_');
+        $fileName = "{$randomName}.{$ext}";
+        $targetPath = $targetDir . $fileName;
+    } while (file_exists($targetPath));
+
     $allowedExt = ['jpg', 'jpeg', 'png', 'webp'];
     if (!in_array(strtolower($ext), $allowedExt)) {
         die('Format Foto ditolak!!!!!!!!');
