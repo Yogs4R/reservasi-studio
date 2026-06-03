@@ -1,3 +1,11 @@
-<?php include '../../includes/header.php'; ?>
-<h1>Delete Alat</h1>
-<?php include '../../includes/footer.php'; ?>
+<?php
+require '../../../config/koneksi.php';
+
+$id_kategori = $_GET['id_kategori'];
+$result = mysqli_query(
+    $conn,
+    "DELETE FROM kategori WHERE id_kategori =$id_kategori",
+);
+
+header('Location: index.php');
+?>
