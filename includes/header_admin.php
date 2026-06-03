@@ -154,7 +154,7 @@ if (!defined('BASE_URL')) {
                 </button>
             </div>
             
-            <!-- Navbar Links -->
+            <!-- Navbar Links
             <div class="collapse navbar-collapse order-lg-2" id="adminNavbarContent">
                 <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-lg-3">
                     <li class="nav-item">
@@ -170,7 +170,7 @@ if (!defined('BASE_URL')) {
                         <a class="nav-link" href="<?= BASE_URL ?>modules/admin/user/index.php">Users</a>
                     </li>
                 </ul>
-            </div>
+            </div> -->
         </div>
     </nav>
 

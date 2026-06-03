@@ -2,40 +2,54 @@
 require_once '../../config/koneksi.php';
 
 // Fetch overall KPI statistics
-$total_reservasi_q = mysqli_query($conn, "SELECT COUNT(*) AS total FROM reservasi");
+$total_reservasi_q = mysqli_query(
+    $conn,
+    'SELECT COUNT(*) AS total FROM reservasi',
+);
 $total_reservasi = mysqli_fetch_assoc($total_reservasi_q)['total'] ?? 0;
 
-$total_revenue_q = mysqli_query($conn, "SELECT SUM(jml_pembayaran) AS total FROM pembayaran");
+$total_revenue_q = mysqli_query(
+    $conn,
+    'SELECT SUM(jml_pembayaran) AS total FROM pembayaran',
+);
 $total_revenue = mysqli_fetch_assoc($total_revenue_q)['total'] ?? 0;
 
-$total_alat_q = mysqli_query($conn, "SELECT COUNT(*) AS total FROM alat_media");
+$total_alat_q = mysqli_query($conn, 'SELECT COUNT(*) AS total FROM alat_media');
 $total_alat = mysqli_fetch_assoc($total_alat_q)['total'] ?? 0;
 
-$total_users_q = mysqli_query($conn, "SELECT COUNT(*) AS total FROM user");
+$total_users_q = mysqli_query($conn, 'SELECT COUNT(*) AS total FROM user');
 $total_users = mysqli_fetch_assoc($total_users_q)['total'] ?? 0;
 
 // Fetch status ketersediaan
-$avail_q = mysqli_query($conn, "SELECT status_ketersediaan, COUNT(*) AS jml FROM alat_media GROUP BY status_ketersediaan");
+$avail_q = mysqli_query(
+    $conn,
+    'SELECT status_ketersediaan, COUNT(*) AS jml FROM alat_media GROUP BY status_ketersediaan',
+);
 $status_counts = ['Tersedia' => 0, 'Disewa' => 0, 'Maintenance' => 0];
 while ($row = mysqli_fetch_assoc($avail_q)) {
     $status = $row['status_ketersediaan'];
     if (array_key_exists($status, $status_counts)) {
-        $status_counts[$status] = (int)$row['jml'];
+        $status_counts[$status] = (int) $row['jml'];
     }
 }
 
 // Fetch kondisi alat
-$cond_q = mysqli_query($conn, "SELECT kondisi_alat, COUNT(*) AS jml FROM alat_media GROUP BY kondisi_alat");
+$cond_q = mysqli_query(
+    $conn,
+    'SELECT kondisi_alat, COUNT(*) AS jml FROM alat_media GROUP BY kondisi_alat',
+);
 $condition_counts = ['Baik' => 0, 'Perlu Perawatan' => 0];
 while ($row = mysqli_fetch_assoc($cond_q)) {
     $cond = $row['kondisi_alat'];
     if (array_key_exists($cond, $condition_counts)) {
-        $condition_counts[$cond] = (int)$row['jml'];
+        $condition_counts[$cond] = (int) $row['jml'];
     }
 }
 
 // Fetch monthly booking/revenue trend (based on reservasi to ensure visibility of data)
-$monthly_q = mysqli_query($conn, "
+$monthly_q = mysqli_query(
+    $conn,
+    "
     SELECT 
         DATE_FORMAT(tgl_reserv, '%b %Y') AS bulan, 
         DATE_FORMAT(tgl_reserv, '%Y-%m') AS order_key,
@@ -45,14 +59,15 @@ $monthly_q = mysqli_query($conn, "
     GROUP BY order_key
     ORDER BY order_key ASC
     LIMIT 6
-");
+",
+);
 $monthly_labels = [];
 $monthly_revenue = [];
 $monthly_bookings = [];
 while ($row = mysqli_fetch_assoc($monthly_q)) {
     $monthly_labels[] = $row['bulan'];
-    $monthly_revenue[] = (float)$row['total_revenue'];
-    $monthly_bookings[] = (int)$row['count_booking'];
+    $monthly_revenue[] = (float) $row['total_revenue'];
+    $monthly_bookings[] = (int) $row['count_booking'];
 }
 
 if (empty($monthly_labels)) {
@@ -62,19 +77,22 @@ if (empty($monthly_labels)) {
 }
 
 // Fetch Top 5 Most Booked Equipment
-$popular_q = mysqli_query($conn, "
+$popular_q = mysqli_query(
+    $conn,
+    "
     SELECT am.nama_alat, COUNT(dr.id_detail) as kali_disewa, SUM(dr.jumlah) as total_qty
     FROM detail_reservasi dr
     JOIN alat_media am ON dr.id_alat = am.id_alat
     GROUP BY dr.id_alat
     ORDER BY total_qty DESC
     LIMIT 5
-");
+",
+);
 $popular_labels = [];
 $popular_data = [];
 while ($row = mysqli_fetch_assoc($popular_q)) {
     $popular_labels[] = $row['nama_alat'];
-    $popular_data[] = (int)$row['total_qty'];
+    $popular_data[] = (int) $row['total_qty'];
 }
 
 if (empty($popular_labels)) {
@@ -83,16 +101,26 @@ if (empty($popular_labels)) {
 }
 
 // Fetch 5 recent bookings
-$recent_q = mysqli_query($conn, "
+$recent_q = mysqli_query(
+    $conn,
+    "
     SELECT r.*, u.nama 
     FROM reservasi r 
     LEFT JOIN user u ON r.id_user = u.id_user 
     ORDER BY r.tgl_reserv DESC 
     LIMIT 5
-");
+",
+);
 
 // Database tables overview rows count
-$tables = ['kategori', 'alat_media', 'user', 'reservasi', 'detail_reservasi', 'pembayaran'];
+$tables = [
+    'kategori',
+    'alat_media',
+    'user',
+    'reservasi',
+    'detail_reservasi',
+    'pembayaran',
+];
 $table_sizes = [];
 foreach ($tables as $t) {
     $size_q = mysqli_query($conn, "SELECT COUNT(*) AS total FROM `$t`");
@@ -185,7 +213,9 @@ $popular_data_json = json_encode($popular_data);
                 <div class="list-group list-group-flush small">
                     <?php foreach ($table_sizes as $table_name => $count): ?>
                     <div class="list-group-item d-flex justify-content-between align-items-center px-0 bg-transparent py-2">
-                        <span class="text-muted text-capitalize"><i class="bi bi-table me-2 text-secondary"></i><?= htmlspecialchars($table_name) ?></span>
+                        <span class="text-muted text-capitalize"><i class="bi bi-table me-2 text-secondary"></i><?= htmlspecialchars(
+                            $table_name,
+                        ) ?></span>
                         <span class="badge bg-secondary-subtle text-secondary-emphasis rounded-pill"><?= $count ?> rows</span>
                     </div>
                     <?php endforeach; ?>
@@ -204,7 +234,12 @@ $popular_data_json = json_encode($popular_data);
                         <div class="card-body d-flex align-items-center justify-content-between p-3.5">
                             <div>
                                 <span class="d-block text-white-50 small text-uppercase fw-semibold mb-1">Total Revenue</span>
-                                <h4 class="fw-bold mb-0">Rp <?= number_format($total_revenue, 0, ',', '.') ?></h4>
+                                <h4 class="fw-bold mb-0">Rp <?= number_format(
+                                    $total_revenue,
+                                    0,
+                                    ',',
+                                    '.',
+                                ) ?></h4>
                             </div>
                             <div class="icon-circle">
                                 <i class="bi bi-cash-coin fs-4"></i>
@@ -219,7 +254,12 @@ $popular_data_json = json_encode($popular_data);
                         <div class="card-body d-flex align-items-center justify-content-between p-3.5">
                             <div>
                                 <span class="d-block text-white-50 small text-uppercase fw-semibold mb-1">Total Bookings</span>
-                                <h4 class="fw-bold mb-0"><?= number_format($total_reservasi, 0, ',', '.') ?></h4>
+                                <h4 class="fw-bold mb-0"><?= number_format(
+                                    $total_reservasi,
+                                    0,
+                                    ',',
+                                    '.',
+                                ) ?></h4>
                             </div>
                             <div class="icon-circle">
                                 <i class="bi bi-calendar2-check fs-4"></i>
@@ -234,7 +274,12 @@ $popular_data_json = json_encode($popular_data);
                         <div class="card-body d-flex align-items-center justify-content-between p-3.5">
                             <div>
                                 <span class="d-block text-white-50 small text-uppercase fw-semibold mb-1">Equipments</span>
-                                <h4 class="fw-bold mb-0"><?= number_format($total_alat, 0, ',', '.') ?></h4>
+                                <h4 class="fw-bold mb-0"><?= number_format(
+                                    $total_alat,
+                                    0,
+                                    ',',
+                                    '.',
+                                ) ?></h4>
                             </div>
                             <div class="icon-circle">
                                 <i class="bi bi-tools fs-4"></i>
@@ -249,7 +294,12 @@ $popular_data_json = json_encode($popular_data);
                         <div class="card-body d-flex align-items-center justify-content-between p-3.5">
                             <div>
                                 <span class="d-block text-white-50 small text-uppercase fw-semibold mb-1">Customers</span>
-                                <h4 class="fw-bold mb-0"><?= number_format($total_users, 0, ',', '.') ?></h4>
+                                <h4 class="fw-bold mb-0"><?= number_format(
+                                    $total_users,
+                                    0,
+                                    ',',
+                                    '.',
+                                ) ?></h4>
                             </div>
                             <div class="icon-circle">
                                 <i class="bi bi-people fs-4"></i>
@@ -284,15 +334,21 @@ $popular_data_json = json_encode($popular_data);
                         </div>
                         <div class="d-flex justify-content-around text-center small pt-2 border-top">
                             <div>
-                                <span class="fw-semibold d-block text-success"><?= $status_counts['Tersedia'] ?></span>
+                                <span class="fw-semibold d-block text-success"><?= $status_counts[
+                                    'Tersedia'
+                                ] ?></span>
                                 <span class="text-muted small">Tersedia</span>
                             </div>
                             <div>
-                                <span class="fw-semibold d-block text-primary"><?= $status_counts['Disewa'] ?></span>
+                                <span class="fw-semibold d-block text-primary"><?= $status_counts[
+                                    'Disewa'
+                                ] ?></span>
                                 <span class="text-muted small">Disewa</span>
                             </div>
                             <div>
-                                <span class="fw-semibold d-block text-warning"><?= $status_counts['Maintenance'] ?></span>
+                                <span class="fw-semibold d-block text-warning"><?= $status_counts[
+                                    'Maintenance'
+                                ] ?></span>
                                 <span class="text-muted small">Maintenance</span>
                             </div>
                         </div>
@@ -325,11 +381,15 @@ $popular_data_json = json_encode($popular_data);
                         </div>
                         <div class="d-flex justify-content-around text-center small pt-3 border-top">
                             <div>
-                                <span class="fw-semibold d-block text-success"><?= $condition_counts['Baik'] ?></span>
+                                <span class="fw-semibold d-block text-success"><?= $condition_counts[
+                                    'Baik'
+                                ] ?></span>
                                 <span class="text-muted small">Baik</span>
                             </div>
                             <div>
-                                <span class="fw-semibold d-block text-danger"><?= $condition_counts['Perlu Perawatan'] ?></span>
+                                <span class="fw-semibold d-block text-danger"><?= $condition_counts[
+                                    'Perlu Perawatan'
+                                ] ?></span>
                                 <span class="text-muted small">Perlu Perawatan</span>
                             </div>
                         </div>
@@ -341,7 +401,7 @@ $popular_data_json = json_encode($popular_data);
             <div class="card dashboard-card shadow-sm mb-4">
                 <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
                     <h5 class="fw-bold text-dark mb-0"><i class="bi bi-activity me-1 text-secondary"></i>Recent Bookings</h5>
-                    <a href="<?= BASE_URL ?>modules/reservasi/riwayat.php" class="btn btn-sm btn-outline-dark fw-semibold">View All</a>
+                    <a href="<?= BASE_URL ?>modules/admin/reservasi/index.php" class="btn btn-sm btn-outline-dark fw-semibold">View All</a>
                 </div>
                 <div class="table-responsive">
                     <table class="table align-middle table-hover mb-0">
@@ -358,33 +418,68 @@ $popular_data_json = json_encode($popular_data);
                         </thead>
                         <tbody>
                             <?php if (mysqli_num_rows($recent_q) > 0): ?>
-                                <?php while ($res = mysqli_fetch_assoc($recent_q)): ?>
-                                    <?php 
+                                <?php while (
+                                    $res = mysqli_fetch_assoc($recent_q)
+                                ): ?>
+                                    <?php
                                     $status = $res['status_reserv'];
                                     $badge_class = 'bg-secondary';
                                     if (strtolower($status) === 'pending') {
-                                        $badge_class = 'bg-warning-subtle text-warning';
-                                    } elseif (strtolower($status) === 'disetujui' || strtolower($status) === 'success' || strtolower($status) === 'paid') {
-                                        $badge_class = 'bg-success-subtle text-success';
-                                    } elseif (strtolower($status) === 'selesai') {
-                                        $badge_class = 'bg-info-subtle text-info';
-                                    } elseif (strtolower($status) === 'dibatalkan' || strtolower($status) === 'failed' || strtolower($status) === 'batal') {
-                                        $badge_class = 'bg-danger-subtle text-danger';
+                                        $badge_class =
+                                            'bg-warning-subtle text-warning';
+                                    } elseif (
+                                        strtolower($status) === 'disetujui' ||
+                                        strtolower($status) === 'success' ||
+                                        strtolower($status) === 'paid'
+                                    ) {
+                                        $badge_class =
+                                            'bg-success-subtle text-success';
+                                    } elseif (
+                                        strtolower($status) === 'selesai'
+                                    ) {
+                                        $badge_class =
+                                            'bg-info-subtle text-info';
+                                    } elseif (
+                                        strtolower($status) === 'dibatalkan' ||
+                                        strtolower($status) === 'failed' ||
+                                        strtolower($status) === 'batal'
+                                    ) {
+                                        $badge_class =
+                                            'bg-danger-subtle text-danger';
                                     }
                                     ?>
                                     <tr>
-                                        <td class="ps-4 fw-semibold">#<?= $res['id_reserv'] ?></td>
-                                        <td class="fw-bold text-dark"><?= htmlspecialchars($res['nama'] ?? 'Unknown User') ?></td>
-                                        <td><?= date('d M Y, H:i', strtotime($res['tgl_reserv'])) ?></td>
-                                        <td class="fw-bold text-dark-emphasis">Rp <?= number_format($res['harga_total'], 0, ',', '.') ?></td>
+                                        <td class="ps-4 fw-semibold">#<?= $res[
+                                            'id_reserv'
+                                        ] ?></td>
+                                        <td class="fw-bold text-dark"><?= htmlspecialchars(
+                                            $res['nama'] ?? 'Unknown User',
+                                        ) ?></td>
+                                        <td><?= date(
+                                            'd M Y, H:i',
+                                            strtotime($res['tgl_reserv']),
+                                        ) ?></td>
+                                        <td class="fw-bold text-dark-emphasis">Rp <?= number_format(
+                                            $res['harga_total'],
+                                            0,
+                                            ',',
+                                            '.',
+                                        ) ?></td>
                                         <td>
-                                            <span class="badge bg-light text-dark border"><i class="bi bi-wallet2 me-1"></i><?= htmlspecialchars($res['metode_pembayaran'] ?? 'Cash') ?></span>
+                                            <span class="badge bg-light text-dark border"><i class="bi bi-wallet2 me-1"></i><?= htmlspecialchars(
+                                                $res['metode_pembayaran'] ??
+                                                    'Cash',
+                                            ) ?></span>
                                         </td>
                                         <td>
-                                            <span class="badge <?= $badge_class ?> px-2.5 py-1.5 fw-semibold"><?= htmlspecialchars($status) ?></span>
+                                            <span class="badge <?= $badge_class ?> px-2.5 py-1.5 fw-semibold"><?= htmlspecialchars(
+     $status,
+ ) ?></span>
                                         </td>
                                         <td class="text-end pe-4">
-                                            <a href="<?= BASE_URL ?>modules/pembayaran/verifikasi.php?id_reserv=<?= $res['id_reserv'] ?>" class="btn btn-sm btn-dark">
+                                            <a href="<?= BASE_URL ?>modules/pembayaran/verifikasi.php?id_reserv=<?= $res[
+    'id_reserv'
+] ?>" class="btn btn-sm btn-dark">
                                                 Verify Payment
                                             </a>
                                         </td>
