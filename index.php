@@ -57,7 +57,7 @@ $popular_items = array_merge($studios, $alats);
                     <small class="text-white-50 d-block text-start">Harga Sewa</small>
                     <span class="fs-4 fw-bold">Rp 250.000 / hari</span>
                 </div>
-                <a href="<?= BASE_URL ?>modules/reservasi/form_booking.php" class="btn btn-light fw-bold text-dark btn-sm">Sewa</a>
+                <a href="<?= BASE_URL ?>modules/reservasi/form_booking.php?id_alat=7" class="btn btn-light fw-bold text-dark btn-sm">Sewa</a>
             </div>
         </div>
     </div>
@@ -162,7 +162,7 @@ $popular_items = array_merge($studios, $alats);
                                 <small class="text-muted d-block" style="font-size: 0.75rem;">Mulai dari</small>
                                 <span class="fw-bold text-dark" style="font-size: 0.95rem;"><?= $harga_formatted ?></span>
                             </div>
-                            <a href="<?= BASE_URL ?>modules/reservasi/form_booking.php" class="btn btn-outline-dark btn-sm fw-semibold">Sewa</a>
+                            <a href="<?= BASE_URL ?>modules/reservasi/form_booking.php?id_alat=<?= $item['id_alat'] ?>" class="btn btn-outline-dark btn-sm fw-semibold">Sewa</a>
                         </div>
                     </div>
                 </div>

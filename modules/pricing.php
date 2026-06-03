@@ -86,7 +86,7 @@ if ($sort === 'price_asc') {
                         <li><i class="bi bi-x-circle text-danger"></i> Tidak Termasuk Kamera & Video</li>
                     </ul>
                 </div>
-                <a href="<?= BASE_URL ?>modules/reservasi/form_booking.php" class="btn btn-outline-dark w-100 py-3 fw-semibold text-uppercase">Pesan Sekarang</a>
+                <a href="<?= BASE_URL ?>modules/reservasi/form_booking.php?type=paket&paket=lite" class="btn btn-outline-dark w-100 py-3 fw-semibold text-uppercase">Pesan Sekarang</a>
             </div>
         </div>
 
@@ -111,7 +111,7 @@ if ($sort === 'price_asc') {
                         <li><i class="bi bi-check2-circle text-success"></i> Free High-speed Wi-Fi</li>
                     </ul>
                 </div>
-                <a href="<?= BASE_URL ?>modules/reservasi/form_booking.php" class="btn btn-dark w-100 py-3 fw-semibold text-uppercase shadow">Pesan Sekarang</a>
+                <a href="<?= BASE_URL ?>modules/reservasi/form_booking.php?type=paket&paket=creator" class="btn btn-dark w-100 py-3 fw-semibold text-uppercase shadow">Pesan Sekarang</a>
             </div>
         </div>
 
@@ -135,7 +135,7 @@ if ($sort === 'price_asc') {
                         <li><i class="bi bi-check2-circle text-success"></i> File Mentahan langsung transfer (SSD/Cloud)</li>
                     </ul>
                 </div>
-                <a href="<?= BASE_URL ?>modules/reservasi/form_booking.php" class="btn btn-outline-dark w-100 py-3 fw-semibold text-uppercase">Pesan Sekarang</a>
+                <a href="<?= BASE_URL ?>modules/reservasi/form_booking.php?type=paket&paket=pro" class="btn btn-outline-dark w-100 py-3 fw-semibold text-uppercase">Pesan Sekarang</a>
             </div>
         </div>
     </div>

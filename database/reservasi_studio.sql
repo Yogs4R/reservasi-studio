@@ -2,6 +2,9 @@
 CREATE DATABASE IF NOT EXISTS `reservasi_studio`;
 USE `reservasi_studio`;
 
+-- IMPORTANT: Tambahan kolom baru di tabel 'reservasi', run query SQL ini di XAMPP Shell
+-- ALTER TABLE `reservasi` ADD COLUMN `tgl_mulai` date NOT NULL AFTER `tgl_reserv`, ADD COLUMN `tgl_selesai` date NOT NULL AFTER `tgl_mulai`;
+
 -- --------------------------------------------------------
 -- Table structure for table `kategori`
 -- --------------------------------------------------------
@@ -49,6 +52,8 @@ CREATE TABLE IF NOT EXISTS `reservasi` (
   `id_reserv` int(11) NOT NULL AUTO_INCREMENT,
   `id_user` int(11) DEFAULT NULL,
   `tgl_reserv` datetime NOT NULL,
+  `tgl_mulai` date NOT NULL,
+  `tgl_selesai` date NOT NULL,
   `status_reserv` varchar(50) DEFAULT 'Pending',
   `harga_total` decimal(10,2) DEFAULT NULL,
   `metode_pembayaran` varchar(50) DEFAULT NULL,
