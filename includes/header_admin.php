@@ -3,6 +3,8 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+date_default_timezone_set('Asia/Jakarta');
+
 // Calculate BASE_URL dynamically to prevent broken links
 $doc_root = str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT']);
 $root_dir = str_replace('\\', '/', dirname(__DIR__));
@@ -133,7 +135,9 @@ if (!defined('BASE_URL')) {
                     <?php if (isset($_SESSION['nama'])): ?>
                         <div class="dropdown">
                             <button class="btn btn-outline-light dropdown-toggle fw-semibold px-3 py-1.5 btn-sm border-white-50" type="button" id="adminDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bi bi-person-circle me-1"></i><?= htmlspecialchars($_SESSION['nama']) ?>
+                                <i class="bi bi-person-circle me-1"></i><?= htmlspecialchars(
+                                    $_SESSION['nama'],
+                                ) ?>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="adminDropdown">
                                 <li><a class="dropdown-menu-item dropdown-item fw-medium py-2" href="<?= BASE_URL ?>index.php"><i class="bi bi-house me-2"></i>Main Web</a></li>
