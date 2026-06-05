@@ -1,5 +1,15 @@
 <?php
-require_once '../../../config/koneksi.php';
+
+require '../../../config/koneksi.php';
+$query = 'SELECT * FROM kategori WHERE 1 = 1';
+
+if (!empty($_GET['search'])) {
+    $search = mysqli_real_escape_string($conn, $_GET['search']);
+    $query .= " AND nama_kategori LIKE '%$search%'";
+}
+
+$query .= ' ORDER BY id_kategori;';
+$hasil = mysqli_query($conn, $query);
 
 // Database tables overview rows count
 $tables = [
@@ -17,12 +27,19 @@ foreach ($tables as $t) {
 }
 ?>
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
 <?php include '../../../includes/header_admin.php'; ?>
-<!-- Header/Title Block -->
 <div class="pt-5 pb-4">
     <div class="p-4 bg-white border border-light shadow-sm rounded-4 mb-4 d-flex flex-wrap justify-content-between align-items-center">
         <div>
-            <h1 class="fw-bold mb-1 text-dark">Kalender Reservasi</h1>
+            <h1 class="fw-bold mb-1 text-dark">kategori Management</h1>
             <p class="text-muted mb-0 small">
                 Analytical database overview, performance metrics, and live system monitoring.
             </p>
@@ -59,4 +76,7 @@ foreach ($tables as $t) {
         </div>
     </div>
 </div>
-<?php include '../../../includes/footer_admin.php'; ?>
+
+<?php include '../../../includes/footer_admin.php'; ?>    
+</body>
+</html>

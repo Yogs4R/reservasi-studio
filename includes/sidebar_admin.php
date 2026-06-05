@@ -34,8 +34,20 @@ if (!defined('BASE_URL')) {
         <a href="<?= BASE_URL ?>modules/admin/reservasi/index.php" class="list-group-item list-group-item-action d-flex align-items-center gap-2 py-2.5">
             <i class="bi bi-calendar3 text-secondary"></i> Booking List
         </a>
+        <a href="<?= BASE_URL ?>modules/admin/pembayaran/index.php" class="list-group-item list-group-item-action d-flex align-items-center gap-2 py-2.5">
+            <i class="bi bi-credit-card text-secondary"></i> Payment Status
+        </a>
+
+        <a href="<?= BASE_URL ?>modules/admin/monitoring_alat/index.php" class="list-group-item list-group-item-action d-flex align-items-center gap-2 py-2.5">
+            <i class="bi bi-journal-text text-secondary"></i> Tools Monitor
+        </a>
+
+        <a href="<?= BASE_URL ?>modules/admin/kalender_reservasi/index.php" class="list-group-item list-group-item-action d-flex align-items-center gap-2 py-2.5">
+            <i class="bi bi-calendar-event text-secondary"></i> Booking Calendar
+        </a>
+
         <a href="<?= BASE_URL ?>index.php" class="list-group-item list-group-item-action d-flex align-items-center gap-2 py-2.5 text-danger border-top">
-            <i class="bi bi-arrow-left-circle-fill"></i> Exit Admin Portal
+            <i class="bi bi-box-arrow-left"></i> Exit Admin Portal
         </a>
     </div>
 </div>
