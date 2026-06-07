@@ -27,7 +27,7 @@ SET time_zone = "+00:00";
 -- Struktur dari tabel `alat_media`
 --
 
-CREATE TABLE `alat_media` (
+CREATE TABLE IF NOT EXISTS `alat_media` (
   `id_alat` int(11) NOT NULL,
   `nama_alat` varchar(100) NOT NULL,
   `desc_alat` text DEFAULT NULL,
@@ -43,7 +43,7 @@ CREATE TABLE `alat_media` (
 -- Dumping data untuk tabel `alat_media`
 --
 
-INSERT INTO `alat_media` (`id_alat`, `nama_alat`, `desc_alat`, `id_kategori`, `harga`, `stok`, `kondisi_alat`, `foto_alat`, `status_ketersediaan`) VALUES
+INSERT IGNORE INTO `alat_media` (`id_alat`, `nama_alat`, `desc_alat`, `id_kategori`, `harga`, `stok`, `kondisi_alat`, `foto_alat`, `status_ketersediaan`) VALUES
 (1, 'Canon EOS R50', 'Kamera mirrorless 24.2MP cocok untuk fotografi produk dan konten sosial media.', 1, 150000.00, 3, 'Baik', '../../assets/img/uploads/Canon EOS R50.png', 'Tersedia'),
 (2, 'Sony A6400', 'Kamera mirrorless dengan autofocus real-time tracking.', 1, 180000.00, 2, 'Baik', '../../assets/img/uploads/Sony A6400.png', 'Tersedia'),
 (3, 'Sony FX30', 'Cinema camera profesional untuk produksi video berkualitas tinggi.', 2, 450000.00, 1, 'Baik', '../../assets/img/uploads/Sony FX30.png', 'Tersedia'),
@@ -71,7 +71,7 @@ INSERT INTO `alat_media` (`id_alat`, `nama_alat`, `desc_alat`, `id_kategori`, `h
 -- Struktur dari tabel `detail_reservasi`
 --
 
-CREATE TABLE `detail_reservasi` (
+CREATE TABLE IF NOT EXISTS `detail_reservasi` (
   `id_detail` int(11) NOT NULL,
   `id_reserv` int(11) DEFAULT NULL,
   `id_alat` int(11) DEFAULT NULL,
@@ -84,7 +84,7 @@ CREATE TABLE `detail_reservasi` (
 -- Dumping data untuk tabel `detail_reservasi`
 --
 
-INSERT INTO `detail_reservasi` (`id_detail`, `id_reserv`, `id_alat`, `jumlah`, `harga_satuan`, `subtotal`) VALUES
+INSERT IGNORE INTO `detail_reservasi` (`id_detail`, `id_reserv`, `id_alat`, `jumlah`, `harga_satuan`, `subtotal`) VALUES
 (1, 1, 1, 1, 150000.00, 150000.00),
 (2, 2, 7, 1, 250000.00, 250000.00),
 (3, 3, 15, 1, 350000.00, 350000.00),
@@ -130,7 +130,7 @@ INSERT INTO `detail_reservasi` (`id_detail`, `id_reserv`, `id_alat`, `jumlah`, `
 -- Struktur dari tabel `kategori`
 --
 
-CREATE TABLE `kategori` (
+CREATE TABLE IF NOT EXISTS `kategori` (
   `id_kategori` int(11) NOT NULL,
   `nama_kategori` varchar(100) NOT NULL,
   `desc_kategori` text DEFAULT NULL
@@ -140,7 +140,7 @@ CREATE TABLE `kategori` (
 -- Dumping data untuk tabel `kategori`
 --
 
-INSERT INTO `kategori` (`id_kategori`, `nama_kategori`, `desc_kategori`) VALUES
+INSERT IGNORE INTO `kategori` (`id_kategori`, `nama_kategori`, `desc_kategori`) VALUES
 (1, 'Fotografi', 'Kategori peralatan fotografi seperti kamera, lensa, tripod, lighting, dan aksesoris pendukung pemotretan.'),
 (2, 'Videografi', 'Kategori peralatan produksi video seperti kamera cinema, gimbal, drone, teleprompter, dan lighting video.'),
 (3, 'Podcast', 'Kategori peralatan audio dan podcast seperti mikrofon, mixer, audio interface, headphone monitoring, dan perangkat recording.'),
@@ -158,7 +158,7 @@ INSERT INTO `kategori` (`id_kategori`, `nama_kategori`, `desc_kategori`) VALUES
 -- Struktur dari tabel `pembayaran`
 --
 
-CREATE TABLE `pembayaran` (
+CREATE TABLE IF NOT EXISTS `pembayaran` (
   `id_pembayaran` int(11) NOT NULL,
   `id_reserv` int(11) DEFAULT NULL,
   `tgl_pembayaran` datetime NOT NULL,
@@ -171,7 +171,7 @@ CREATE TABLE `pembayaran` (
 -- Dumping data untuk tabel `pembayaran`
 --
 
-INSERT INTO `pembayaran` (`id_pembayaran`, `id_reserv`, `tgl_pembayaran`, `jml_pembayaran`, `bukti_pembayaran`, `kode_transaksi`) VALUES
+INSERT IGNORE INTO `pembayaran` (`id_pembayaran`, `id_reserv`, `tgl_pembayaran`, `jml_pembayaran`, `bukti_pembayaran`, `kode_transaksi`) VALUES
 (1, 1, '2026-06-01 08:20:00', 150000.00, 'bukti_001.jpg', 'TRX20260601001'),
 (2, 2, '2026-06-01 09:35:00', 250000.00, 'bukti_002.jpg', 'TRX20260601002'),
 (3, 3, '2026-06-02 10:50:00', 350000.00, 'bukti_003.jpg', 'TRX20260602003'),
@@ -195,7 +195,7 @@ INSERT INTO `pembayaran` (`id_pembayaran`, `id_reserv`, `tgl_pembayaran`, `jml_p
 -- Struktur dari tabel `reservasi`
 --
 
-CREATE TABLE `reservasi` (
+CREATE TABLE IF NOT EXISTS `reservasi` (
   `id_reserv` int(11) NOT NULL,
   `id_user` int(11) DEFAULT NULL,
   `tgl_reserv` datetime NOT NULL,
@@ -210,7 +210,7 @@ CREATE TABLE `reservasi` (
 -- Dumping data untuk tabel `reservasi`
 --
 
-INSERT INTO `reservasi` (`id_reserv`, `id_user`, `tgl_reserv`, `tgl_mulai`, `tgl_selesai`, `status_reserv`, `harga_total`, `metode_pembayaran`) VALUES
+INSERT IGNORE INTO `reservasi` (`id_reserv`, `id_user`, `tgl_reserv`, `tgl_mulai`, `tgl_selesai`, `status_reserv`, `harga_total`, `metode_pembayaran`) VALUES
 (1, 1, '2026-06-01 08:15:00', '2026-06-05', '2026-06-05', 'Finished', 150000.00, 'QRIS'),
 (2, 2, '2026-06-01 09:30:00', '2026-06-06', '2026-06-06', 'Finished', 250000.00, 'Transfer Bank'),
 (3, 3, '2026-06-02 10:45:00', '2026-06-07', '2026-06-07', 'Finished', 350000.00, 'E-Wallet'),
@@ -238,7 +238,7 @@ INSERT INTO `reservasi` (`id_reserv`, `id_user`, `tgl_reserv`, `tgl_mulai`, `tgl
 -- Struktur dari tabel `user`
 --
 
-CREATE TABLE `user` (
+CREATE TABLE IF NOT EXISTS `user` (
   `id_user` int(11) NOT NULL,
   `nama` varchar(100) NOT NULL,
   `email` varchar(100) NOT NULL,
@@ -250,7 +250,7 @@ CREATE TABLE `user` (
 -- Dumping data untuk tabel `user`
 --
 
-INSERT INTO `user` (`id_user`, `nama`, `email`, `id_password`, `no_hp`) VALUES
+INSERT IGNORE INTO `user` (`id_user`, `nama`, `email`, `id_password`, `no_hp`) VALUES
 (1, 'Admin StudioHub', 'admin@studiohub.com', '$2y$10$tM28Y1Qx7rC8Zz8v2z8yXeC.m9pZ9BwD7qQ1q0lZ3F4z7e9K3p4mK', '081234567890'),
 (2, 'Abyan Santoso', 'abyan@gmail.com', '$2y$10$oXg8D7n9wH1qY6Z.z8z8YeC.m9pZ9BwD7qQ1q0lZ3F4z7e9K3p4mK', '085712345678'),
 (3, 'Ahmad Fauzi', 'ahmad.fauzi@gmail.com', '$2y$10$abcdefghijklmnopqrstuv1234567890abcdefghi', '081234567801'),

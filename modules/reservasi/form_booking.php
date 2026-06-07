@@ -185,19 +185,25 @@ $preselected_id = isset($_GET['id_alat']) ? intval($_GET['id_alat']) : 0;
                         
                         <!-- Pilihan Utama (Main Categories) -->
                         <div class="row g-2 mb-4" id="main_payment_categories">
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <input type="radio" class="btn-check" name="kategori_pembayaran" id="pay_cat_bank" value="bank" checked autocomplete="off">
                                 <label class="btn btn-outline-secondary w-100 py-2.5 fw-semibold" for="pay_cat_bank" style="border-radius: 6px; font-size: 0.85rem;">
                                     <i class="bi bi-bank me-1"></i> Transfer Bank
                                 </label>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <input type="radio" class="btn-check" name="kategori_pembayaran" id="pay_cat_wallet" value="wallet" autocomplete="off">
                                 <label class="btn btn-outline-secondary w-100 py-2.5 fw-semibold" for="pay_cat_wallet" style="border-radius: 6px; font-size: 0.85rem;">
                                     <i class="bi bi-wallet2 me-1"></i> E-Wallet
                                 </label>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
+                                <input type="radio" class="btn-check" name="kategori_pembayaran" id="pay_cat_qris" value="qris" autocomplete="off">
+                                <label class="btn btn-outline-secondary w-100 py-2.5 fw-semibold" for="pay_cat_qris" style="border-radius: 6px; font-size: 0.85rem;">
+                                    <i class="bi bi-qr-code-scan me-1"></i> QRIS
+                                </label>
+                            </div>
+                            <div class="col-md-3">
                                 <input type="radio" class="btn-check" name="kategori_pembayaran" id="pay_cat_international" value="international" autocomplete="off">
                                 <label class="btn btn-outline-secondary w-100 py-2.5 fw-semibold" for="pay_cat_international" style="border-radius: 6px; font-size: 0.85rem;">
                                     <i class="bi bi-globe me-1"></i> Internasional
@@ -304,6 +310,20 @@ $preselected_id = isset($_GET['id_alat']) ? intval($_GET['id_alat']) : 0;
                                                 <img src="<?= BASE_URL ?>assets/img/stripe.webp" alt="Stripe" style="height: 24px; max-width: 80px; object-fit: contain;">
                                             </div>
                                             <span class="small fw-semibold text-dark d-block" style="font-size: 0.75rem;">Stripe</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 4d. QRIS OPTIONS -->
+                            <div id="payment_details_qris" class="payment-child-section" style="display: none;">
+                                <div class="row g-2 justify-content-center">
+                                    <div class="col-6 col-sm-4">
+                                        <div class="payment-method-card border rounded p-2 text-center h-100" data-method-val="QRIS" style="cursor: pointer; border-radius: 6px; transition: all 0.2s;">
+                                            <div class="payment-logo-placeholder mb-2 d-flex align-items-center justify-content-center" style="height: 35px;">
+                                                <img src="<?= BASE_URL ?>assets/img/qris.webp" alt="QRIS" style="height: 24px; max-width: 80px; object-fit: contain;">
+                                            </div>
+                                            <span class="small fw-semibold text-dark d-block" style="font-size: 0.75rem;">QRIS</span>
                                         </div>
                                     </div>
                                 </div>
@@ -495,10 +515,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- Dynamic Payment Category Selector ---
     const payCatBank = document.getElementById('pay_cat_bank');
     const payCatWallet = document.getElementById('pay_cat_wallet');
+    const payCatQris = document.getElementById('pay_cat_qris');
     const payCatInt = document.getElementById('pay_cat_international');
     
     const detailsBank = document.getElementById('payment_details_bank');
     const detailsWallet = document.getElementById('payment_details_wallet');
+    const detailsQris = document.getElementById('payment_details_qris');
     const detailsInt = document.getElementById('payment_details_international');
 
     const paymentInput = document.getElementById('selected_payment_method');
@@ -508,6 +530,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Hide all child sections
         detailsBank.style.display = 'none';
         detailsWallet.style.display = 'none';
+        detailsQris.style.display = 'none';
         detailsInt.style.display = 'none';
 
         // Remove active class from all payment option cards
@@ -521,6 +544,9 @@ document.addEventListener('DOMContentLoaded', function() {
         } else if (payCatWallet.checked) {
             detailsWallet.style.display = 'block';
             defaultCard = detailsWallet.querySelector('.payment-method-card');
+        } else if (payCatQris.checked) {
+            detailsQris.style.display = 'block';
+            defaultCard = detailsQris.querySelector('.payment-method-card');
         } else if (payCatInt.checked) {
             detailsInt.style.display = 'block';
             defaultCard = detailsInt.querySelector('.payment-method-card');
@@ -536,6 +562,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Set payment listeners
     payCatBank.addEventListener('change', togglePaymentCategory);
     payCatWallet.addEventListener('change', togglePaymentCategory);
+    payCatQris.addEventListener('change', togglePaymentCategory);
     payCatInt.addEventListener('change', togglePaymentCategory);
 
     // Child Option Click Listeners

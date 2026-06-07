@@ -2,14 +2,14 @@
 
 require '../../../config/koneksi.php';
 $query =
-    'SELECT a.*,b.id_reserv FROM pembayaran a LEFT JOIN reservasi b ON a.id_reserv = b.id_reserv WHERE 1 = 1';
+    'SELECT a.*, b.status_reserv FROM pembayaran a LEFT JOIN reservasi b ON a.id_reserv = b.id_reserv WHERE 1 = 1';
 
 if (!empty($_GET['search'])) {
     $search = mysqli_real_escape_string($conn, $_GET['search']);
-    $query .= " AND nama_kategori LIKE '%$search%'";
+    $query .= " AND (a.kode_transaksi LIKE '%$search%' OR a.id_reserv LIKE '%$search%')";
 }
 
-$query .= ' ORDER BY id_pembayaran;';
+$query .= ' ORDER BY a.id_pembayaran DESC;';
 $hasil = mysqli_query($conn, $query);
 
 // Database tables overview rows count
@@ -75,13 +75,13 @@ foreach ($tables as $t) {
         <div class="col-lg-9">
             <form method="GET" class="row g-2 mb-4">
                 <div class="col-md-10">
-                    <input type="text" name="search" class="form-control" placeholder="Search Kategori" value="<?= $_GET[
+                    <input type="text" name="search" class="form-control" placeholder="Cari Kode Transaksi / ID Reservasi..." value="<?= $_GET[
                         'search'
                     ] ?? '' ?>">
                 </div>
                 <div class="col-md-2">
                     <button type="submit" class="btn btn-dark w-100">
-                        Search
+                        Cari
                     </button>
                 </div>                
             </form>
@@ -94,29 +94,62 @@ foreach ($tables as $t) {
                             <th>ID Reservasi</th>
                             <th>Tgl-Pembayaran</th>
                             <th>Jumlah</th>
-                            <th>Bukti Pembayaran</th>
+                            <th>Status Reservasi</th>
+                            <th>Bukti</th>
+                            <th style="width: 100px;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
                         $no = 1;
 
-                        while ($data = mysqli_fetch_array($hasil)) { ?> 
+                        while ($data = mysqli_fetch_array($hasil)) { 
+                            $status = $data['status_reserv'];
+                            $badge_class = 'bg-secondary';
+                            $status_text = htmlspecialchars($status ?? 'Unknown');
+                            
+                            if ($status === 'Pending') {
+                                $badge_class = 'bg-warning-subtle text-warning-emphasis border border-warning-subtle';
+                            } else if ($status === 'Waiting Payment') {
+                                $badge_class = 'bg-info-subtle text-info-emphasis border border-info-subtle';
+                                $status_text = 'Waiting Payment';
+                            } else if ($status === 'Booked') {
+                                $badge_class = 'bg-success-subtle text-success-emphasis border border-success-subtle';
+                            } else if ($status === 'Cancelled') {
+                                $badge_class = 'bg-danger-subtle text-danger-emphasis border border-danger-subtle';
+                            } else if ($status === 'On Going') {
+                                $badge_class = 'bg-primary-subtle text-primary-emphasis border border-primary-subtle';
+                            } else if ($status === 'Finished') {
+                                $badge_class = 'bg-dark-subtle text-dark-emphasis border border-dark-subtle';
+                            }
+                        ?> 
                                 <tr>
                                     <td><?php echo $no; ?></td>
-                                    <td><?php echo $data[
-                                        'kode_transaksi'
-                                    ]; ?></td>
-                                    <td><?php echo $data['id_reserv']; ?></td>
-                                    <td><?php echo $data[
-                                        'tgl_pembayaran'
-                                    ]; ?></td>
-                                    <td><?php echo $data[
-                                        'jml_pembayaran'
-                                    ]; ?></td>
-                                    <td><?php echo $data[
-                                        'bukti_pembayaran'
-                                    ]; ?></td>
+                                    <td class="fw-semibold"><?php echo htmlspecialchars($data['kode_transaksi']); ?></td>
+                                    <td>#<?php echo $data['id_reserv']; ?></td>
+                                    <td><small><?php echo date('d M Y, H:i', strtotime($data['tgl_pembayaran'])); ?></small></td>
+                                    <td class="fw-bold">Rp <?php echo number_format($data['jml_pembayaran'], 0, ',', '.'); ?></td>
+                                    <td>
+                                        <span class="badge <?= $badge_class ?> px-2.5 py-1.5 fw-semibold" style="font-size: 0.75rem; border-radius: 4px;">
+                                            <?= $status_text ?>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <?php if ($data['bukti_pembayaran']): ?>
+                                            <a href="<?= BASE_URL ?>assets/img/uploads/<?php echo htmlspecialchars($data['bukti_pembayaran']); ?>" target="_blank" class="btn btn-outline-secondary btn-xs py-0 px-2 fw-medium" style="font-size: 0.75rem;">
+                                                <i class="bi bi-file-earmark-image"></i> Lihat
+                                            </a>
+                                        <?php else: ?>
+                                            <span class="text-muted small">-</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex gap-1">
+                                            <a href="<?= BASE_URL ?>modules/pembayaran/verifikasi.php?id_reserv=<?= $data['id_reserv'] ?>" class="btn <?= $status === 'Waiting Payment' ? 'btn-dark' : 'btn-outline-secondary' ?> btn-sm text-nowrap fw-bold" style="font-size: 0.75rem;">
+                                                <i class="bi bi-shield-check me-1"></i><?= $status === 'Waiting Payment' ? 'Verify' : 'Detail' ?>
+                                            </a>
+                                        </div>
+                                    </td>
                                 </tr>
                             <?php $no++;}
                         ?>
