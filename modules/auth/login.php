@@ -46,11 +46,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     
                     // Re-hash and auto-repair the database row to make it valid
                     $new_hash = password_hash($password, PASSWORD_DEFAULT);
-                    $stmt_update = $pdo->prepare("UPDATE user SET id_password = :hash WHERE id_user = :id_user");
+                    $stmt_update = $pdo->prepare("UPDATE user SET id_password = :hash, role = :role WHERE id_user = :id_user");
                     $stmt_update->execute([
                         'hash' => $new_hash,
+                        'role' => ($email_lower === 'admin@studiohub.com') ? 'admin' : 'pelanggan',
                         'id_user' => $user['id_user']
                     ]);
+                    $user['role'] = ($email_lower === 'admin@studiohub.com') ? 'admin' : 'pelanggan';
                     $login_success = true;
                 }
             }
@@ -60,9 +62,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['user_id'] = $user['id_user'];
                 $_SESSION['nama'] = $user['nama'];
                 $_SESSION['email'] = $user['email'];
+                $_SESSION['role'] = $user['role'] ?? 'pelanggan';
 
                 // Redirect logic
-                if ($user['id_user'] == 1 || strtolower($user['email']) === 'admin@studiohub.com') {
+                if (($_SESSION['role'] ?? '') === 'admin') {
                     header("Location: ../admin/index.php");
                 } elseif (!empty($redirect)) {
                     header("Location: " . $redirect);

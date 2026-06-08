@@ -27,7 +27,7 @@ if (!defined('BASE_URL')) {
 }
 
 // Access Control check: Require admin login
-if (!isset($_SESSION['user_id']) || ($_SESSION['user_id'] != 1 && strtolower($_SESSION['email'] ?? '') !== 'admin@studiohub.com')) {
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     header("Location: " . BASE_URL . "modules/auth/login.php?redirect=" . urlencode($_SERVER['REQUEST_URI']));
     exit();
 }

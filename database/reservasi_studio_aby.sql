@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 08 Jun 2026 pada 11.50
+-- Waktu pembuatan: 05 Jun 2026 pada 17.49
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -52,11 +52,10 @@ INSERT IGNORE INTO `alat_media` (`id_alat`, `nama_alat`, `desc_alat`, `id_katego
 (6, 'Rodecaster Pro II', 'Mixer podcast profesional dengan fitur recording terintegrasi.', 3, 200000.00, 1, 'Baik', '../../assets/img/uploads/Rodecaster Pro II.png', 'Disewa'),
 (7, 'Studio Podcast A', 'Ruangan podcast kapasitas 4 orang lengkap dengan peredam suara.', 4, 250000.00, 1, 'Baik', '../../assets/img/uploads/Studio Podcast A.png', 'Tersedia'),
 (8, 'Studio Foto White Room', 'Studio foto profesional dengan background putih dan lighting lengkap.', 4, 300000.00, 1, 'Baik', '../../assets/img/uploads/Studio Foto White Room.png', 'Tersedia'),
--- Elgato Stream Deck MK2 description says 'livestream dan content creator.' or 'livestream and content creator.' Let's use 'livestream dan content creator.'
 (9, 'Elgato Stream Deck MK2', 'Perangkat shortcut khusus livestream dan content creator.', 5, 40000.00, 3, 'Baik', '../../assets/img/uploads/Elgato Stream Deck MK2.png', 'Tersedia'),
 (10, 'Logitech Brio 4K', 'Webcam profesional resolusi 4K untuk meeting dan streaming.', 5, 60000.00, 4, 'Baik', '../../assets/img/uploads/Logitech Brio 4K.png', 'Tersedia'),
 (11, 'Focusrite Scarlett 2i2', 'Audio interface USB untuk recording profesional.', 6, 75000.00, 3, 'Baik', '../../assets/img/uploads/Focusrite Scarlett 2i2.png', 'Tersedia'),
-(12, 'Audio Technica AT2020', 'Mikrofon condenser untuk voice over and recording studio.', 6, 50000.00, 4, 'Baik', '../../assets/img/uploads/Audio Technica AT2020.png', 'Tersedia'),
+(12, 'Audio Technica AT2020', 'Mikrofon condenser untuk voice over dan recording studio.', 6, 50000.00, 4, 'Baik', '../../assets/img/uploads/Audio Technica AT2020.png', 'Tersedia'),
 (13, 'Aputure 300D', 'Lampu LED profesional dengan intensitas tinggi.', 7, 100000.00, 3, 'Baik', '../../assets/img/uploads/Aputure 300D.png', 'Tersedia'),
 (14, 'Godox Softbox Kit', 'Paket softbox lengkap untuk studio foto dan video.', 7, 50000.00, 5, 'Baik', '../../assets/img/uploads/Godox Softbox Kit.png', 'Tersedia'),
 (15, 'DJI Mini 4 Pro', 'Drone ringan dengan kemampuan video 4K HDR.', 8, 350000.00, 1, 'Baik', '../../assets/img/uploads/DJI Mini 4 Pro.png', 'Tersedia'),
@@ -244,27 +243,26 @@ CREATE TABLE IF NOT EXISTS `user` (
   `nama` varchar(100) NOT NULL,
   `email` varchar(100) NOT NULL,
   `id_password` varchar(255) NOT NULL,
-  `no_hp` varchar(20) DEFAULT NULL,
-  `role` enum('admin','pelanggan') DEFAULT 'pelanggan'
+  `no_hp` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data untuk tabel `user`
 --
 
-INSERT IGNORE INTO `user` (`id_user`, `nama`, `email`, `id_password`, `no_hp`, `role`) VALUES
-(1, 'Admin StudioHub', 'admin@studiohub.com', '$2y$10$tM28Y1Qx7rC8Zz8v2z8yXeC.m9pZ9BwD7qQ1q0lZ3F4z7e9K3p4mK', '081234567890', 'admin'),
-(2, 'Abyan Santoso', 'abyan@gmail.com', '$2y$10$oXg8D7n9wH1qY6Z.z8z8YeC.m9pZ9BwD7qQ1q0lZ3F4z7e9K3p4mK', '085712345678', 'pelanggan'),
-(3, 'Ahmad Fauzi', 'ahmad.fauzi@gmail.com', '$2y$10$abcdefghijklmnopqrstuv1234567890abcdefghi', '081234567801', 'pelanggan'),
-(4, 'Siti Nurhaliza', 'siti.nurhaliza@gmail.com', '$2y$10$bcdefghijklmnopqrstuvw1234567890abcdefghij', '081234567802', 'pelanggan'),
-(5, 'Budi Santoso', 'budi.santoso@gmail.com', '$2y$10$cdefghijklmnopqrstuvwx1234567890abcdefghijk', '081234567803', 'pelanggan'),
-(6, 'Dewi Lestari', 'dewi.lestari@gmail.com', '$2y$10$defghijklmnopqrstuvwxy1234567890abcdefghijkl', '081234567804', 'pelanggan'),
-(7, 'Rizky Pratama', 'rizky.pratama@gmail.com', '$2y$10$efghijklmnopqrstuvwxyz1234567890abcdefghijklm', '081234567805', 'pelanggan'),
-(8, 'Nabila Putri', 'nabila.putri@gmail.com', '$2y$10$fghijklmnopqrstuvwxyza1234567890abcdefghijklmn', '081234567806', 'pelanggan'),
-(9, 'Fajar Ramadhan', 'fajar.ramadhan@gmail.com', '$2y$10$ghijklmnopqrstuvwxyzab1234567890abcdefghijklmno', '081234567807', 'pelanggan'),
-(10, 'Intan Permata', 'intan.permata@gmail.com', '$2y$10$hijklmnopqrstuvwxyzabc1234567890abcdefghijklmnop', '081234567808', 'pelanggan'),
-(11, 'Dimas Saputra', 'dimas.saputra@gmail.com', '$2y$10$ijklmnopqrstuvwxyzabcd1234567890abcdefghijklmnopq', '081234567809', 'pelanggan'),
-(12, 'Putri Maharani', 'putri.maharani@gmail.com', '$2y$10$jklmnopqrstuvwxyzabcde1234567890abcdefghijklmnopqr', '081234567810', 'pelanggan');
+INSERT IGNORE INTO `user` (`id_user`, `nama`, `email`, `id_password`, `no_hp`) VALUES
+(1, 'Admin StudioHub', 'admin@studiohub.com', '$2y$10$tM28Y1Qx7rC8Zz8v2z8yXeC.m9pZ9BwD7qQ1q0lZ3F4z7e9K3p4mK', '081234567890'),
+(2, 'Abyan Santoso', 'abyan@gmail.com', '$2y$10$oXg8D7n9wH1qY6Z.z8z8YeC.m9pZ9BwD7qQ1q0lZ3F4z7e9K3p4mK', '085712345678'),
+(3, 'Ahmad Fauzi', 'ahmad.fauzi@gmail.com', '$2y$10$abcdefghijklmnopqrstuv1234567890abcdefghi', '081234567801'),
+(4, 'Siti Nurhaliza', 'siti.nurhaliza@gmail.com', '$2y$10$bcdefghijklmnopqrstuvw1234567890abcdefghij', '081234567802'),
+(5, 'Budi Santoso', 'budi.santoso@gmail.com', '$2y$10$cdefghijklmnopqrstuvwx1234567890abcdefghijk', '081234567803'),
+(6, 'Dewi Lestari', 'dewi.lestari@gmail.com', '$2y$10$defghijklmnopqrstuvwxy1234567890abcdefghijkl', '081234567804'),
+(7, 'Rizky Pratama', 'rizky.pratama@gmail.com', '$2y$10$efghijklmnopqrstuvwxyz1234567890abcdefghijklm', '081234567805'),
+(8, 'Nabila Putri', 'nabila.putri@gmail.com', '$2y$10$fghijklmnopqrstuvwxyza1234567890abcdefghijklmn', '081234567806'),
+(9, 'Fajar Ramadhan', 'fajar.ramadhan@gmail.com', '$2y$10$ghijklmnopqrstuvwxyzab1234567890abcdefghijklmno', '081234567807'),
+(10, 'Intan Permata', 'intan.permata@gmail.com', '$2y$10$hijklmnopqrstuvwxyzabc1234567890abcdefghijklmnop', '081234567808'),
+(11, 'Dimas Saputra', 'dimas.saputra@gmail.com', '$2y$10$ijklmnopqrstuvwxyzabcd1234567890abcdefghijklmnopq', '081234567809'),
+(12, 'Putri Maharani', 'putri.maharani@gmail.com', '$2y$10$jklmnopqrstuvwxyzabcde1234567890abcdefghijklmnopqr', '081234567810');
 
 --
 -- Indexes for dumped tables
@@ -321,7 +319,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT untuk tabel `alat_media`
 --
 ALTER TABLE `alat_media`
-  MODIFY `id_alat` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id_alat` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT untuk tabel `detail_reservasi`

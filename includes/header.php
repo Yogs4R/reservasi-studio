@@ -40,6 +40,29 @@ if (!defined('BASE_URL')) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <!-- Local Style CSS using dynamic BASE_URL -->
     <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/style.css?v=<?= time() ?>">
+    
+    <!-- Active Page Indicator Styling -->
+    <style>
+        .navbar-nav .nav-link {
+            position: relative;
+            padding-bottom: 4px;
+            transition: color 0.2s ease;
+        }
+        .navbar-nav .nav-link.active {
+            color: #000000 !important;
+            font-weight: 700;
+        }
+        .navbar-nav .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 8px;
+            right: 8px;
+            height: 2px;
+            background-color: #000000;
+            border-radius: 2px;
+        }
+    </style>
 </head>
 <body>
 
@@ -65,7 +88,7 @@ if (!defined('BASE_URL')) {
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="userDropdown">
                                 <li><a class="dropdown-menu-item dropdown-item fw-medium py-2" href="<?= BASE_URL ?>modules/reservasi/riwayat.php">My Bookings</a></li>
-                                <?php if (isset($_SESSION['user_id']) && ($_SESSION['user_id'] == 1 || strtolower($_SESSION['email'] ?? '') === 'admin@studiohub.com')): ?>
+                                <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
                                     <li><a class="dropdown-menu-item dropdown-item fw-semibold text-primary py-2" href="<?= BASE_URL ?>modules/admin/index.php"><i class="bi bi-shield-lock me-1"></i>Admin Panel</a></li>
                                 <?php endif; ?>
                                 <li><hr class="dropdown-divider"></li>
@@ -82,16 +105,22 @@ if (!defined('BASE_URL')) {
             </div>
             
             <!-- Navbar Links -->
+            <?php
+            $current_uri = $_SERVER['REQUEST_URI'];
+            $active_catalog = (strpos($current_uri, 'modules/kategori') !== false) ? 'active' : '';
+            $active_equipment = (strpos($current_uri, 'modules/alat') !== false) ? 'active' : '';
+            $active_pricing = (strpos($current_uri, 'modules/pricing.php') !== false) ? 'active' : '';
+            ?>
             <div class="collapse navbar-collapse order-lg-2" id="navbarContent">
                 <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-lg-3">
                     <li class="nav-item">
-                        <a class="nav-link" href="<?= BASE_URL ?>modules/kategori/index.php">Catalog</a>
+                        <a class="nav-link <?= $active_catalog ?>" href="<?= BASE_URL ?>modules/kategori/index.php">Catalog</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?= BASE_URL ?>modules/alat/index.php">Equipment</a>
+                        <a class="nav-link <?= $active_equipment ?>" href="<?= BASE_URL ?>modules/alat/index.php">Equipment</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?= BASE_URL ?>modules/pricing.php">Pricing</a>
+                        <a class="nav-link <?= $active_pricing ?>" href="<?= BASE_URL ?>modules/pricing.php">Pricing</a>
                     </li>
                 </ul>
             </div>
