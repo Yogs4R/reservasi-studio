@@ -135,8 +135,13 @@ foreach ($tables as $t) {
                                         </span>
                                     </td>
                                     <td>
-                                        <?php if ($data['bukti_pembayaran']): ?>
-                                            <a href="<?= BASE_URL ?>assets/img/uploads/<?php echo htmlspecialchars($data['bukti_pembayaran']); ?>" target="_blank" class="btn btn-outline-secondary btn-xs py-0 px-2 fw-medium" style="font-size: 0.75rem;">
+                                        <?php if ($data['bukti_pembayaran']): 
+                                            $link_path = 'assets/img/uploads/' . $data['bukti_pembayaran'];
+                                            if (file_exists('../../../assets/img/uploads/bukti/' . $data['bukti_pembayaran'])) {
+                                                $link_path = 'assets/img/uploads/bukti/' . $data['bukti_pembayaran'];
+                                            }
+                                        ?>
+                                            <a href="<?= BASE_URL . $link_path ?>" target="_blank" class="btn btn-outline-secondary btn-xs py-0 px-2 fw-medium" style="font-size: 0.75rem;">
                                                 <i class="bi bi-file-earmark-image"></i> Lihat
                                             </a>
                                         <?php else: ?>

@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error_msg = 'Ukuran berkas gambar maksimal 2 MB.';
         } else {
             // Ensure uploads directory exists
-            $upload_dir = '../../assets/img/uploads/';
+            $upload_dir = '../../assets/img/uploads/bukti/';
             if (!is_dir($upload_dir)) {
                 mkdir($upload_dir, 0777, true);
             }

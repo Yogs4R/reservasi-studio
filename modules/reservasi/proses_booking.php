@@ -47,7 +47,7 @@ if ($tipe_booking === 'harian') {
     }
     
     // Fetch product details
-    $stmt = $pdo->prepare("SELECT harga, status_ketersediaan FROM alat_media WHERE id_alat = :id_alat");
+    $stmt = $pdo->prepare("SELECT nama_alat, harga, status_ketersediaan, stok FROM alat_media WHERE id_alat = :id_alat");
     $stmt->execute(['id_alat' => $id_alat]);
     $product = $stmt->fetch(PDO::FETCH_ASSOC);
     
@@ -100,28 +100,60 @@ if ($tipe_booking === 'harian') {
     }
     
     $harga_total = $harga_satuan;
+
+    // Fetch product details for package item
+    $stmt = $pdo->prepare("SELECT nama_alat, harga, status_ketersediaan, stok FROM alat_media WHERE id_alat = :id_alat");
+    $stmt->execute(['id_alat' => $id_alat]);
+    $product = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if (!$product) {
+        header("Location: form_booking.php?status=error&message=Studio/Alat tidak ditemukan.");
+        exit();
+    }
+    
+    if ($product['status_ketersediaan'] !== 'Tersedia') {
+        header("Location: form_booking.php?status=error&message=Status studio/alat sedang tidak tersedia.");
+        exit();
+    }
 } else {
     header("Location: form_booking.php");
     exit();
 }
 
-// 3. VALIDASI BENTROKAN JADWAL (Real-time Calendar Check)
-$stmt_check = $pdo->prepare("SELECT COUNT(*) AS total 
-                             FROM reservasi r 
-                             JOIN detail_reservasi dr ON r.id_reserv = dr.id_reserv 
-                             WHERE dr.id_alat = :id_alat 
-                               AND r.status_reserv IN ('Pending', 'Waiting Payment', 'Booked', 'On Going') 
-                               AND r.tgl_mulai <= :tgl_selesai 
-                               AND r.tgl_selesai >= :tgl_mulai");
-$stmt_check->execute([
-    'id_alat' => $id_alat,
-    'tgl_mulai' => $tgl_mulai,
-    'tgl_selesai' => $tgl_selesai
-]);
-$conflict_count = $stmt_check->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
+// 3. VALIDASI BENTROKAN JADWAL BERDASARKAN STOK
+$stok_total = intval($product['stok'] ?? 1);
+$current_date = new DateTime($tgl_mulai);
+$end_date = new DateTime($tgl_selesai);
+$end_date->modify('+1 day'); // inclusive
 
-if ($conflict_count > 0) {
-    header("Location: form_booking.php?status=error&message=Jadwal untuk studio/alat tersebut sudah ter-booking pada tanggal pilihan Anda.");
+$interval = new DateInterval('P1D');
+$period = new DatePeriod($current_date, $interval, $end_date);
+
+$max_rented = 0;
+foreach ($period as $dt) {
+    $date_str = $dt->format('Y-m-d');
+    
+    $stmt_rented = $pdo->prepare("
+        SELECT COALESCE(SUM(dr.jumlah), 0) AS total_rented
+        FROM reservasi r
+        JOIN detail_reservasi dr ON r.id_reserv = dr.id_reserv
+        WHERE dr.id_alat = :id_alat
+          AND r.status_reserv IN ('Pending', 'Waiting Payment', 'Booked', 'On Going')
+          AND r.tgl_mulai <= :date_str
+          AND r.tgl_selesai >= :date_str
+    ");
+    $stmt_rented->execute([
+        'id_alat' => $id_alat,
+        'date_str' => $date_str
+    ]);
+    $rented = intval($stmt_rented->fetch(PDO::FETCH_ASSOC)['total_rented'] ?? 0);
+    if ($rented > $max_rented) {
+        $max_rented = $rented;
+    }
+}
+
+if ($max_rented + 1 > $stok_total) {
+    header("Location: form_booking.php?status=error&message=" . urlencode("Stok untuk " . $product['nama_alat'] . " tidak mencukupi pada tanggal pilihan Anda (Sudah ter-booking " . $max_rented . " dari " . $stok_total . " unit)."));
     exit();
 }
 

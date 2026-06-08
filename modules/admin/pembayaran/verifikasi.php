@@ -256,7 +256,9 @@ include '../../../includes/header_admin.php';
 
                                 <small class="text-muted d-block mb-2 text-uppercase fw-semibold" style="font-size: 0.75rem;">Struk / Gambar Bukti:</small>
                                 <div class="flex-grow-1 d-flex align-items-center justify-content-center border rounded-3 p-3 bg-light overflow-hidden position-relative" style="min-height: 250px;">
-                                    <?php if ($data['bukti_pembayaran'] && file_exists('../../../assets/img/uploads/' . $data['bukti_pembayaran'])): ?>
+                                    <?php if ($data['bukti_pembayaran'] && file_exists('../../../assets/img/uploads/bukti/' . $data['bukti_pembayaran'])): ?>
+                                        <img src="../../../assets/img/uploads/bukti/<?= htmlspecialchars($data['bukti_pembayaran']) ?>" alt="Bukti Pembayaran" class="img-fluid rounded shadow-sm" style="max-height: 400px; object-fit: contain;">
+                                    <?php elseif ($data['bukti_pembayaran'] && file_exists('../../../assets/img/uploads/' . $data['bukti_pembayaran'])): ?>
                                         <img src="../../../assets/img/uploads/<?= htmlspecialchars($data['bukti_pembayaran']) ?>" alt="Bukti Pembayaran" class="img-fluid rounded shadow-sm" style="max-height: 400px; object-fit: contain;">
                                     <?php else: ?>
                                         <div class="text-center text-muted">
