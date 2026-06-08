@@ -283,42 +283,46 @@ include '../../../includes/header_admin.php';
                                     $currentDateStr = sprintf('%04d-%02d-%02d', $year, $month, $dayCounter);
                                     $isToday = ($currentDateStr === $todayDate);
                                     
-                                    echo '<td>';
+                                    // Saring reservasi hari ini untuk payload klik tanggal
+                                    $dayReservations = [];
+                                    foreach ($reservations as $reserv) {
+                                        if ($currentDateStr >= $reserv['tgl_mulai'] && $currentDateStr <= $reserv['tgl_selesai']) {
+                                            $dayReservations[] = $reserv;
+                                        }
+                                    }
+                                    $escapedDayReservations = htmlspecialchars(json_encode($dayReservations), ENT_QUOTES, 'UTF-8');
+                                    
+                                    echo '<td onclick="selectDay(\'' . $currentDateStr . '\', ' . $escapedDayReservations . ')" style="cursor: pointer;">';
                                     echo '<span class="day-number ' . ($isToday ? 'today' : '') . '">' . $dayCounter . '</span>';
                                     
                                     // Temukan semua event / reservasi yang melewati hari ini
                                     echo '<div class="event-list">';
-                                    foreach ($reservations as $reserv) {
-                                        $startDate = $reserv['tgl_mulai'];
-                                        $endDate = $reserv['tgl_selesai'];
-                                        
-                                        if ($currentDateStr >= $startDate && $currentDateStr <= $endDate) {
-                                            $status = strtolower($reserv['status_reserv']);
-                                            $class = 'event-pending';
-                                            if ($status === 'booked') {
-                                                $class = 'event-booked';
-                                            } elseif ($status === 'success' || $status === 'paid' || $status === 'disetujui') {
-                                                $class = 'event-success';
-                                            } elseif ($status === 'failed' || $status === 'batal' || $status === 'dibatalkan') {
-                                                $class = 'event-failed';
-                                            } elseif ($status === 'selesai' || $status === 'finish') {
-                                                $class = 'event-finish';
-                                            }
-                                            
-                                            // Ambil nama item pertama yang disewa
-                                            $itemName = 'Reservasi';
-                                            if (!empty($reserv['items'])) {
-                                                $itemName = $reserv['items'][0]['nama_alat'];
-                                                if (count($reserv['items']) > 1) {
-                                                    $itemName .= ' (+' . (count($reserv['items']) - 1) . ')';
-                                                }
-                                            }
-                                            
-                                            $escapedReserv = htmlspecialchars(json_encode($reserv), ENT_QUOTES, 'UTF-8');
-                                            echo '<div class="event-item ' . $class . '" onclick="showDetail(' . $escapedReserv . ')" title="' . htmlspecialchars($reserv['nama'] . ' - ' . $itemName) . '">';
-                                            echo '<strong>' . htmlspecialchars($reserv['nama']) . '</strong>: ' . htmlspecialchars($itemName);
-                                            echo '</div>';
+                                    foreach ($dayReservations as $reserv) {
+                                        $status = strtolower($reserv['status_reserv']);
+                                        $class = 'event-pending';
+                                        if ($status === 'booked') {
+                                            $class = 'event-booked';
+                                        } elseif ($status === 'success' || $status === 'paid' || $status === 'disetujui') {
+                                            $class = 'event-success';
+                                        } elseif ($status === 'failed' || $status === 'batal' || $status === 'dibatalkan') {
+                                            $class = 'event-failed';
+                                        } elseif ($status === 'selesai' || $status === 'finish') {
+                                            $class = 'event-finish';
                                         }
+                                        
+                                        // Ambil nama item pertama yang disewa
+                                        $itemName = 'Reservasi';
+                                        if (!empty($reserv['items'])) {
+                                            $itemName = $reserv['items'][0]['nama_alat'];
+                                            if (count($reserv['items']) > 1) {
+                                                $itemName .= ' (+' . (count($reserv['items']) - 1) . ')';
+                                            }
+                                        }
+                                        
+                                        $escapedReserv = htmlspecialchars(json_encode($reserv), ENT_QUOTES, 'UTF-8');
+                                        echo '<div class="event-item ' . $class . '" onclick="event.stopPropagation(); showDetail(' . $escapedReserv . ')" title="' . htmlspecialchars($reserv['nama'] . ' - ' . $itemName) . '">';
+                                        echo '<strong>' . htmlspecialchars($reserv['nama']) . '</strong>: ' . htmlspecialchars($itemName);
+                                        echo '</div>';
                                     }
                                     echo '</div>';
                                     
@@ -336,6 +340,33 @@ include '../../../includes/header_admin.php';
                                 
                                 echo '</tr>';
                                 ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Detailed List Per Hari Panel -->
+                <div class="card shadow-sm border-0 rounded-4 p-4 bg-white mt-4" id="dailyDetailPanel" style="display:none;">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="fw-bold text-dark mb-0">
+                            <i class="bi bi-calendar-event me-2 text-primary"></i>Detail Reservasi Tanggal: <span id="selectedDateText">-</span>
+                        </h4>
+                        <button type="button" class="btn-close" onclick="document.getElementById('dailyDetailPanel').style.display='none';"></button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table align-middle table-hover m-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Pelanggan</th>
+                                    <th>Metode Pembayaran</th>
+                                    <th>Total Biaya</th>
+                                    <th>Status</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dailyDetailTableBody">
+                                <!-- Baris data detail harian dimuat di sini -->
                             </tbody>
                         </table>
                     </div>
@@ -408,6 +439,65 @@ include '../../../includes/header_admin.php';
     </div>
 
     <script>
+        function selectDay(dateStr, dayReservations) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const formattedDate = new Date(dateStr).toLocaleDateString('id-ID', options);
+            document.getElementById('selectedDateText').innerText = formattedDate;
+            
+            const tableBody = document.getElementById('dailyDetailTableBody');
+            tableBody.innerHTML = '';
+            
+            if (dayReservations && dayReservations.length > 0) {
+                dayReservations.forEach(reserv => {
+                    let badgeClass = 'bg-secondary';
+                    const status = (reserv.status_reserv || '').toLowerCase();
+                    if (status === 'pending') {
+                        badgeClass = 'bg-warning-subtle text-warning';
+                    } else if (status === 'booked') {
+                        badgeClass = 'bg-primary-subtle text-primary';
+                    } else if (status === 'success' || status === 'paid' || status === 'disetujui') {
+                        badgeClass = 'bg-success-subtle text-success';
+                    } else if (status === 'failed' || status === 'batal' || status === 'dibatalkan') {
+                        badgeClass = 'bg-danger-subtle text-danger';
+                    } else if (status === 'selesai' || status === 'finish') {
+                        badgeClass = 'bg-info-subtle text-info';
+                    }
+
+                    const formattedPrice = 'Rp ' + parseInt(reserv.harga_total).toLocaleString('id-ID');
+                    const escapedReserv = JSON.stringify(reserv).replace(/"/g, '&quot;');
+                    
+                    const rowHtml = `
+                        <tr>
+                            <td><strong>#${reserv.id_reserv}</strong></td>
+                            <td>
+                                <div class="fw-bold text-dark">${reserv.nama}</div>
+                                <div class="text-muted small">${reserv.email || '-'}</div>
+                            </td>
+                            <td><span class="badge bg-light text-dark border">${reserv.metode_pembayaran || 'Cash'}</span></td>
+                            <td class="fw-bold text-dark-emphasis">${formattedPrice}</td>
+                            <td><span class="badge ${badgeClass} fw-semibold">${reserv.status_reserv}</span></td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-dark me-1" onclick="showDetail(${escapedReserv})">Detail</button>
+                                <a href="../detail_reservasi/index.php?id_reserv=${reserv.id_reserv}" class="btn btn-sm btn-outline-dark">Info Lengkap</a>
+                            </td>
+                        </tr>
+                    `;
+                    tableBody.insertAdjacentHTML('beforeend', rowHtml);
+                });
+            } else {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center py-4 text-muted">
+                            Tidak ada reservasi aktif pada tanggal ini.
+                        </td>
+                    </tr>
+                `;
+            }
+            
+            document.getElementById('dailyDetailPanel').style.display = 'block';
+            document.getElementById('dailyDetailPanel').scrollIntoView({ behavior: 'smooth' });
+        }
+
         function showDetail(reserv) {
             document.getElementById('detailNama').innerText = reserv.nama || 'Tidak diketahui';
             document.getElementById('detailEmail').innerText = reserv.email || '-';
@@ -472,7 +562,8 @@ include '../../../includes/header_admin.php';
             
             // Set verification redirect link
             const verifyBtn = document.getElementById('detailVerifikasiBtn');
-            verifyBtn.href = '<?= BASE_URL ?>modules/pembayaran/verifikasi.php?id_reserv=' + reserv.id_reserv;
+            verifyBtn.href = '../detail_reservasi/index.php?id_reserv=' + reserv.id_reserv;
+            verifyBtn.innerText = 'Buka Detail Informasi Reservasi';
             
             // Trigger Bootstrap Modal
             const modal = new bootstrap.Modal(document.getElementById('detailModal'));

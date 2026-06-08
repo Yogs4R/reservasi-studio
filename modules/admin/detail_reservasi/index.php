@@ -1,15 +1,44 @@
 <?php
-
 require '../../../config/koneksi.php';
-$query = 'SELECT * FROM kategori WHERE 1 = 1';
 
-if (!empty($_GET['search'])) {
-    $search = mysqli_real_escape_string($conn, $_GET['search']);
-    $query .= " AND nama_kategori LIKE '%$search%'";
+$id_reserv = isset($_GET['id_reserv']) ? (int)$_GET['id_reserv'] : 0;
+
+if ($id_reserv <= 0) {
+    header("Location: ../reservasi/index.php");
+    exit();
 }
 
-$query .= ' ORDER BY id_kategori;';
-$hasil = mysqli_query($conn, $query);
+// Fetch reservation main data along with user details
+$reservQuery = "
+    SELECT r.*, u.nama, u.email, u.no_hp 
+    FROM reservasi r 
+    LEFT JOIN user u ON r.id_user = u.id_user 
+    WHERE r.id_reserv = '$id_reserv'
+";
+$reservHasil = mysqli_query($conn, $reservQuery);
+$reservData = mysqli_fetch_assoc($reservHasil);
+
+if (!$reservData) {
+    echo "<script>alert('Reservasi tidak ditemukan.'); window.location.href='../reservasi/index.php';</script>";
+    exit();
+}
+
+// Fetch detail items (alat_media) rented in this reservation
+$detailQuery = "
+    SELECT dr.*, am.nama_alat, am.foto_alat, c.nama_kategori
+    FROM detail_reservasi dr
+    JOIN alat_media am ON dr.id_alat = am.id_alat
+    LEFT JOIN kategori c ON am.id_kategori = c.id_kategori
+    WHERE dr.id_reserv = '$id_reserv'
+";
+$detailHasil = mysqli_query($conn, $detailQuery);
+
+// Fetch payment data if exists
+$pembayaranQuery = "
+    SELECT * FROM pembayaran WHERE id_reserv = '$id_reserv' LIMIT 1
+";
+$pembayaranHasil = mysqli_query($conn, $pembayaranQuery);
+$pembayaranData = mysqli_fetch_assoc($pembayaranHasil);
 
 // Database tables overview rows count
 $tables = [
@@ -25,31 +54,50 @@ foreach ($tables as $t) {
     $size_q = mysqli_query($conn, "SELECT COUNT(*) AS total FROM `$t`");
     $table_sizes[$t] = mysqli_fetch_assoc($size_q)['total'] ?? 0;
 }
+
+include '../../../includes/header_admin.php';
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Detail Reservasi #<?= $id_reserv ?></title>
+    <style>
+        .detail-card {
+            border: 1px solid #e3e6f0;
+            border-radius: 12px;
+            background: #ffffff;
+        }
+        .item-img {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+    </style>
 </head>
 <body>
-<?php include '../../../includes/header_admin.php'; ?>
 <div class="pt-5 pb-4">
+    <!-- Header / Title -->
     <div class="p-4 bg-white border border-light shadow-sm rounded-4 mb-4 d-flex flex-wrap justify-content-between align-items-center">
         <div>
-            <h1 class="fw-bold mb-1 text-dark">Reservation Detail</h1>
+            <h1 class="fw-bold mb-1 text-dark">Detail Reservasi #<?= $id_reserv ?></h1>
             <p class="text-muted mb-0 small">
-                Analytical database overview, performance metrics, and live system monitoring.
+                Rincian informasi pemesanan studio, persewaan alat, dan status pembayaran.
             </p>
         </div>
         <div class="mt-3 mt-md-0">
+            <a href="../reservasi/index.php" class="btn btn-outline-dark me-2">
+                <i class="bi bi-arrow-left me-1"></i> Kembali
+            </a>
             <span class="badge bg-dark-subtle text-dark border border-dark-subtle px-3 py-2 fw-semibold">
                 <i class="bi bi-clock me-1"></i> <?= date('d M Y, H:i') ?>
             </span>
         </div>
     </div>
+
     <div class="row g-4">
         <!-- Left Sidebar Navigation Column -->
         <div class="col-lg-3">
@@ -61,84 +109,182 @@ foreach ($tables as $t) {
                 <div class="list-group list-group-flush small">
                     <?php foreach ($table_sizes as $table_name => $count): ?>
                     <div class="list-group-item d-flex justify-content-between align-items-center px-0 bg-transparent py-2">
-                        <span class="text-muted text-capitalize"><i class="bi bi-table me-2 text-secondary"></i><?= htmlspecialchars(
-                            $table_name,
-                        ) ?></span>
+                        <span class="text-muted text-capitalize"><i class="bi bi-table me-2 text-secondary"></i><?= htmlspecialchars($table_name) ?></span>
                         <span class="badge bg-secondary-subtle text-secondary-emphasis rounded-pill"><?= $count ?> rows</span>
                     </div>
                     <?php endforeach; ?>
                 </div>
             </div>
         </div>
-        <!-- Content -->
+
+        <!-- Main Content -->
         <div class="col-lg-9">
-            <form method="GET" class="row g-2 mb-4">
-                <div class="col-md-8">
-                    <input type="text" name="search" class="form-control" placeholder="Search Kategori" value="<?= $_GET[
-                        'search'
-                    ] ?? '' ?>">
+            <div class="row g-4">
+                <!-- Info Pelanggan & Reservasi -->
+                <div class="col-md-6">
+                    <div class="card detail-card shadow-sm p-4 h-100">
+                        <h5 class="fw-bold text-dark border-bottom pb-2 mb-3">
+                            <i class="bi bi-person-circle text-primary me-2"></i>Informasi Pelanggan
+                        </h5>
+                        <div class="mb-3">
+                            <label class="text-muted small d-block">Nama Pelanggan</label>
+                            <span class="fw-bold text-dark fs-5"><?= htmlspecialchars($reservData['nama']) ?></span>
+                        </div>
+                        <div class="mb-3">
+                            <label class="text-muted small d-block">Email</label>
+                            <span class="fw-semibold text-dark"><?= htmlspecialchars($reservData['email'] ?? '-') ?></span>
+                        </div>
+                        <div class="mb-3">
+                            <label class="text-muted small d-block">Nomor HP / WhatsApp</label>
+                            <span class="fw-semibold text-dark"><?= htmlspecialchars($reservData['no_hp'] ?? '-') ?></span>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-2">
-                    <button type="submit" class="btn btn-dark w-100">
-                        Search
-                    </button>
-                </div>
-                <div class="col-md-2">
-                    <button class="btn btn-success w-100">
-                        Add Kategori
-                    </button>
-                </div>
-            </form>
-            <div class="row g-2 mb-4">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Nama Kategori</th>
-                            <th>Deskripsi Kategori</th>
-                            <th style="width: 100px;">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        $no = 1;
 
-                        while ($data = mysqli_fetch_array($hasil)) { ?> 
-                                <tr>
-                                    <td><?php echo $no; ?></td>
-                                    <td><?php echo $data[
-                                        'nama_kategori'
-                                    ]; ?></td>
-                                    <td><?php echo $data[
-                                        'desc_kategori'
-                                    ]; ?></td>
-                                    <td>
-                                        <a href="./update.php?id_kategori=<?= $data[
-                                            'id_kategori'
-                                        ] ?>" class="btn btn-warning btn-sm" title="edit" style="padding-bottom: 8px;">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
-                                                <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z"/>
-                                            </svg>
-                                        </a>
-                                        <a onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?');" href="./delete.php?id_kategori=<?= $data[
-                                            'id_kategori'
-                                        ] ?>" class="btn btn-danger btn-sm" title="delete" style="padding-bottom: 8px;">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
-                                            <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
-                                            </svg>
-                                        </a>
-                                    </td>
-                                </tr>
-                            <?php $no++;}
-                        ?>
-                    </tbody>
-                </table>
+                <div class="col-md-6">
+                    <div class="card detail-card shadow-sm p-4 h-100">
+                        <h5 class="fw-bold text-dark border-bottom pb-2 mb-3">
+                            <i class="bi bi-calendar-check text-primary me-2"></i>Status Reservasi
+                        </h5>
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <label class="text-muted small d-block">Tanggal Mulai</label>
+                                <span class="fw-semibold text-dark"><?= date('d F Y', strtotime($reservData['tgl_mulai'])) ?></span>
+                            </div>
+                            <div class="col-6">
+                                <label class="text-muted small d-block">Tanggal Selesai</label>
+                                <span class="fw-semibold text-dark"><?= date('d F Y', strtotime($reservData['tgl_selesai'])) ?></span>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <label class="text-muted small d-block">Status Reservasi</label>
+                                <?php
+                                $status = $reservData['status_reserv'];
+                                $badge_class = 'bg-secondary';
+                                if ($status === 'Pending') {
+                                    $badge_class = 'bg-warning-subtle text-warning-emphasis border border-warning-subtle';
+                                } else if ($status === 'Waiting Payment') {
+                                    $badge_class = 'bg-info-subtle text-info-emphasis border border-info-subtle';
+                                } else if ($status === 'Booked') {
+                                    $badge_class = 'bg-success-subtle text-success-emphasis border border-success-subtle';
+                                } else if ($status === 'Cancelled') {
+                                    $badge_class = 'bg-danger-subtle text-danger-emphasis border border-danger-subtle';
+                                } else if ($status === 'On Going') {
+                                    $badge_class = 'bg-primary-subtle text-primary-emphasis border border-primary-subtle';
+                                } else if ($status === 'Finished') {
+                                    $badge_class = 'bg-dark-subtle text-dark-emphasis border border-dark-subtle';
+                                }
+                                ?>
+                                <span class="badge <?= $badge_class ?> px-2.5 py-1.5 fw-semibold mt-1">
+                                    <?= htmlspecialchars($status) ?>
+                                </span>
+                            </div>
+                            <div class="col-6">
+                                <label class="text-muted small d-block">Metode Pembayaran</label>
+                                <span class="badge bg-light text-dark border fw-semibold mt-1 py-1.5">
+                                    <?= htmlspecialchars($reservData['metode_pembayaran'] ?? 'Cash') ?>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <label class="text-muted small d-block">Total Biaya Reservasi</label>
+                            <span class="fw-bold text-dark-emphasis fs-4">Rp <?= number_format($reservData['harga_total'], 0, ',', '.') ?></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detail Item yang Disewa -->
+                <div class="col-12">
+                    <div class="card detail-card shadow-sm p-4">
+                        <h5 class="fw-bold text-dark border-bottom pb-2 mb-3">
+                            <i class="bi bi-box-seam text-primary me-2"></i>Item Studio / Alat yang Disewa
+                        </h5>
+                        <div class="table-responsive">
+                            <table class="table align-middle table-hover m-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Foto</th>
+                                        <th>Nama Item</th>
+                                        <th>Kategori</th>
+                                        <th class="text-center">Kuantitas</th>
+                                        <th>Harga Satuan</th>
+                                        <th class="text-end">Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php if (mysqli_num_rows($detailHasil) > 0): ?>
+                                        <?php while ($item = mysqli_fetch_assoc($detailHasil)): ?>
+                                            <tr>
+                                                <td>
+                                                    <?php if (!empty($item['foto_alat'])): ?>
+                                                        <img src="<?= htmlspecialchars($item['foto_alat']) ?>" class="item-img shadow-sm border border-light" alt="Foto">
+                                                    <?php else: ?>
+                                                        <div class="bg-light text-muted d-flex align-items-center justify-content-center item-img border border-light shadow-sm">
+                                                            <i class="bi bi-camera fs-3"></i>
+                                                        </div>
+                                                    <?php endif; ?>
+                                                </td>
+                                                <td>
+                                                    <span class="fw-bold text-dark"><?= htmlspecialchars($item['nama_alat']) ?></span>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-secondary-subtle text-secondary-emphasis"><?= htmlspecialchars($item['nama_kategori'] ?? '-') ?></span>
+                                                </td>
+                                                <td class="text-center fw-semibold"><?= $item['jumlah'] ?> unit</td>
+                                                <td>Rp <?= number_format($item['harga_satuan'], 0, ',', '.') ?></td>
+                                                <td class="text-end fw-bold text-dark-emphasis">Rp <?= number_format($item['subtotal'], 0, ',', '.') ?></td>
+                                            </tr>
+                                        <?php endwhile; ?>
+                                    <?php else: ?>
+                                        <tr>
+                                            <td colspan="6" class="text-center text-muted py-3">Tidak ada detail item reservasi.</td>
+                                        </tr>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Informasi Pembayaran jika ada -->
+                <?php if ($pembayaranData): ?>
+                <div class="col-12">
+                    <div class="card detail-card shadow-sm p-4">
+                        <h5 class="fw-bold text-dark border-bottom pb-2 mb-3">
+                            <i class="bi bi-credit-card text-primary me-2"></i>Informasi Transaksi & Pembayaran
+                        </h5>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="text-muted small d-block">Kode Transaksi</label>
+                                <span class="fw-bold text-dark"><?= htmlspecialchars($pembayaranData['kode_transaksi']) ?></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="text-muted small d-block">Tanggal Bayar</label>
+                                <span class="fw-semibold text-dark"><?= date('d F Y, H:i', strtotime($pembayaranData['tgl_pembayaran'])) ?></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="text-muted small d-block">Jumlah Dibayar</label>
+                                <span class="fw-bold text-success">Rp <?= number_format($pembayaranData['jml_pembayaran'], 0, ',', '.') ?></span>
+                            </div>
+                            
+                            <?php if (!empty($pembayaranData['bukti_pembayaran'])): ?>
+                            <div class="col-12 mt-3">
+                                <label class="text-muted small d-block mb-2">Bukti Pembayaran</label>
+                                <a href="<?= BASE_URL ?>assets/img/uploads/<?= htmlspecialchars($pembayaranData['bukti_pembayaran']) ?>" target="_blank" class="d-inline-block shadow-sm rounded border p-2">
+                                    <img src="<?= BASE_URL ?>assets/img/uploads/<?= htmlspecialchars($pembayaranData['bukti_pembayaran']) ?>" style="max-height: 200px; max-width: 100%; border-radius: 6px; object-fit: contain;" alt="Bukti Pembayaran">
+                                </a>
+                            </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+                <?php endif; ?>
             </div>
-
         </div>
     </div>
 </div>
-
-<?php include '../../../includes/footer_admin.php'; ?>    
 </body>
 </html>
+
+<?php include '../../../includes/footer_admin.php'; ?>

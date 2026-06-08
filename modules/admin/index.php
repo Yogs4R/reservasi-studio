@@ -477,6 +477,9 @@ $popular_data_json = json_encode($popular_data);
  ) ?></span>
                                         </td>
                                         <td class="text-end pe-4">
+                                            <a href="detail_reservasi/index.php?id_reserv=<?= $res['id_reserv'] ?>" class="btn btn-sm btn-outline-dark me-1">
+                                                Detail
+                                            </a>
                                             <a href="<?= BASE_URL ?>modules/pembayaran/verifikasi.php?id_reserv=<?= $res[
     'id_reserv'
 ] ?>" class="btn btn-sm btn-dark">

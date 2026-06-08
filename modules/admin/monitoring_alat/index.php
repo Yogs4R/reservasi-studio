@@ -314,11 +314,8 @@ include '../../../includes/header_admin.php';
                                     $currentDateStr = sprintf('%04d-%02d-%02d', $year, $month, $dayCounter);
                                     $isToday = ($currentDateStr === $todayDate);
                                     
-                                    echo '<td>';
-                                    echo '<span class="day-number ' . ($isToday ? 'today' : '') . '">' . $dayCounter . '</span>';
-                                    echo '<div class="monitor-list">';
-                                    
-                                    // Tampilkan fraksi okupansi untuk masing-masing alat yang terdaftar/dicari
+                                    // Saring okupansi seluruh alat pada hari ini untuk payload klik tanggal
+                                    $dayOccupancies = [];
                                     foreach ($list_alat as $alat) {
                                         $id_alat = $alat['id_alat'];
                                         $stok = (int)$alat['stok'];
@@ -330,7 +327,32 @@ include '../../../includes/header_admin.php';
                                             $details = $usage_tracker[$id_alat][$currentDateStr]['details'];
                                         }
                                         
-                                        // Skip jika alat tidak disewa sama sekali hari ini (opsional untuk memperbersih layar, atau tetap tampilkan yang disewa saja)
+                                        if ($rented > 0) {
+                                            $dayOccupancies[] = [
+                                                'nama_alat' => $alat['nama_alat'],
+                                                'stok' => $stok,
+                                                'rented' => $rented,
+                                                'details' => $details,
+                                                'tanggal' => $currentDateStr
+                                            ];
+                                        }
+                                    }
+                                    $escapedDayOccupancies = htmlspecialchars(json_encode($dayOccupancies), ENT_QUOTES, 'UTF-8');
+                                    
+                                    echo '<td onclick="selectDayMonitor(\'' . $currentDateStr . '\', ' . $escapedDayOccupancies . ')" style="cursor: pointer;">';
+                                    echo '<span class="day-number ' . ($isToday ? 'today' : '') . '">' . $dayCounter . '</span>';
+                                    echo '<div class="monitor-list">';
+                                    
+                                    // Tampilkan fraksi okupansi untuk masing-masing alat yang terdaftar/dicari
+                                    foreach ($list_alat as $alat) {
+                                        $id_alat = $alat['id_alat'];
+                                        $stok = (int)$alat['stok'];
+                                        $rented = 0;
+                                        
+                                        if (isset($usage_tracker[$id_alat][$currentDateStr])) {
+                                            $rented = $usage_tracker[$id_alat][$currentDateStr]['total_rented'];
+                                        }
+                                        
                                         if ($rented === 0) {
                                             continue;
                                         }
@@ -340,18 +362,17 @@ include '../../../includes/header_admin.php';
                                             $class = ($rented >= $stok) ? 'occupancy-full' : 'occupancy-partial';
                                         }
                                         
-                                        // Buat parameter objek detail untuk modal Javascript
                                         $modalPayload = [
                                             'tanggal' => $currentDateStr,
                                             'nama_alat' => $alat['nama_alat'],
                                             'stok' => $stok,
                                             'rented' => $rented,
-                                            'details' => $details
+                                            'details' => isset($usage_tracker[$id_alat][$currentDateStr]) ? $usage_tracker[$id_alat][$currentDateStr]['details'] : []
                                         ];
                                         
                                         $escapedPayload = htmlspecialchars(json_encode($modalPayload), ENT_QUOTES, 'UTF-8');
                                         
-                                        echo '<div class="monitor-item ' . $class . '" onclick="showMonitorDetail(' . $escapedPayload . ')" title="Klik untuk info detail penyewaan">';
+                                        echo '<div class="monitor-item ' . $class . '" onclick="event.stopPropagation(); showMonitorDetail(' . $escapedPayload . ')" title="Klik untuk info detail penyewaan">';
                                         echo '<span class="text-truncate" style="max-width: 65%;">' . htmlspecialchars($alat['nama_alat']) . '</span>';
                                         echo '<span class="fw-bold">' . $rented . '/' . $stok . '</span>';
                                         echo '</div>';
@@ -372,6 +393,33 @@ include '../../../includes/header_admin.php';
                                 
                                 echo '</tr>';
                                 ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Detailed List Per Hari Panel -->
+                <div class="card shadow-sm border-0 rounded-4 p-4 bg-white mt-4" id="dailyMonitorPanel" style="display:none;">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="fw-bold text-dark mb-0">
+                            <i class="bi bi-tools me-2 text-primary"></i>Okupansi Alat Tanggal: <span id="selectedDateText">-</span>
+                        </h4>
+                        <button type="button" class="btn-close" onclick="document.getElementById('dailyMonitorPanel').style.display='none';"></button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table align-middle table-hover m-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Nama Alat</th>
+                                    <th>Total Stok</th>
+                                    <th>Jumlah Disewa</th>
+                                    <th>Persentase Okupansi</th>
+                                    <th>Status Okupansi</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dailyMonitorTableBody">
+                                <!-- Baris data monitoring harian dimuat di sini -->
                             </tbody>
                         </table>
                     </div>
@@ -419,6 +467,65 @@ include '../../../includes/header_admin.php';
     </div>
 
     <script>
+        function selectDayMonitor(dateStr, dayOccupancies) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const formattedDate = new Date(dateStr).toLocaleDateString('id-ID', options);
+            document.getElementById('selectedDateText').innerText = formattedDate;
+            
+            const tableBody = document.getElementById('dailyMonitorTableBody');
+            tableBody.innerHTML = '';
+            
+            if (dayOccupancies && dayOccupancies.length > 0) {
+                dayOccupancies.forEach(occ => {
+                    const pct = Math.round((occ.rented / occ.stok) * 100);
+                    let badgeClass = 'bg-success-subtle text-success';
+                    let statusLabel = 'Tersedia Banyak';
+                    
+                    if (occ.rented >= occ.stok) {
+                        badgeClass = 'bg-danger-subtle text-danger';
+                        statusLabel = 'Habis Disewa';
+                    } else if (pct >= 50) {
+                        badgeClass = 'bg-warning-subtle text-warning';
+                        statusLabel = 'Okupansi Tinggi';
+                    }
+                    
+                    const escapedPayload = JSON.stringify(occ).replace(/"/g, '&quot;');
+                    
+                    const rowHtml = `
+                        <tr>
+                            <td><span class="fw-bold text-dark">${occ.nama_alat}</span></td>
+                            <td>${occ.stok} unit</td>
+                            <td><strong class="text-dark">${occ.rented} unit</strong></td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <span class="me-2 fw-semibold">${pct}%</span>
+                                    <div class="progress w-100" style="height: 6px;">
+                                        <div class="progress-bar ${occ.rented >= occ.stok ? 'bg-danger' : (pct >= 50 ? 'bg-warning' : 'bg-success')}" role="progressbar" style="width: ${pct}%" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="badge ${badgeClass} fw-semibold">${statusLabel}</span></td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-dark" onclick="event.stopPropagation(); showMonitorDetail(${escapedPayload})">Info Penyewa</button>
+                            </td>
+                        </tr>
+                    `;
+                    tableBody.insertAdjacentHTML('beforeend', rowHtml);
+                });
+            } else {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center py-4 text-muted">
+                            Tidak ada okupansi alat aktif pada tanggal ini (Semua alat 100% tersedia).
+                        </td>
+                    </tr>
+                `;
+            }
+            
+            document.getElementById('dailyMonitorPanel').style.display = 'block';
+            document.getElementById('dailyMonitorPanel').scrollIntoView({ behavior: 'smooth' });
+        }
+
         function showMonitorDetail(payload) {
             document.getElementById('modalNamaAlat').innerText = payload.nama_alat;
             
@@ -439,7 +546,7 @@ include '../../../includes/header_admin.php';
                                 <h6 class="mb-0 fw-bold small text-dark">${item.nama}</h6>
                                 <small class="text-muted">Jumlah disewa: ${item.jumlah} unit</small>
                             </div>
-                            <a href="<?= BASE_URL ?>modules/pembayaran/verifikasi.php?id_reserv=${item.id_reserv}" class="btn btn-sm btn-outline-dark py-1 px-2.5 small">
+                             <a href="../detail_reservasi/index.php?id_reserv=${item.id_reserv}" class="btn btn-sm btn-outline-dark py-1 px-2.5 small">
                                 Reservasi #${item.id_reserv}
                             </a>
                         </div>

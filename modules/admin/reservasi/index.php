@@ -138,6 +138,9 @@ foreach ($tables as $t) {
                                     </td>
                                     <td>
                                         <div class="d-flex gap-1">
+                                            <a href="../detail_reservasi/index.php?id_reserv=<?= $data['id_reserv'] ?>" class="btn btn-outline-dark btn-sm" title="Detail Reservasi" style="padding-bottom: 4px; padding-top: 4px;">
+                                                <i class="bi bi-eye"></i> Detail
+                                            </a>
                                             <?php if ($status === 'Waiting Payment'): ?>
                                                 <a href="<?= BASE_URL ?>modules/admin/pembayaran/verifikasi.php?id_reserv=<?= $data['id_reserv'] ?>" class="btn btn-dark btn-sm fw-bold px-2" title="Verify Payment" style="font-size: 0.75rem;">
                                                     <i class="bi bi-shield-check me-1"></i>Verify
