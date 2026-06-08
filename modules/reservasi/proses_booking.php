@@ -56,7 +56,7 @@ if ($tipe_booking === 'harian') {
         exit();
     }
     
-    if ($product['status_ketersediaan'] !== 'Tersedia') {
+    if (!in_array($product['status_ketersediaan'], ['Tersedia', 'Disewa'])) {
         header("Location: form_booking.php?status=error&message=Status studio/alat sedang tidak tersedia.");
         exit();
     }
@@ -111,7 +111,7 @@ if ($tipe_booking === 'harian') {
         exit();
     }
     
-    if ($product['status_ketersediaan'] !== 'Tersedia') {
+    if (!in_array($product['status_ketersediaan'], ['Tersedia', 'Disewa'])) {
         header("Location: form_booking.php?status=error&message=Status studio/alat sedang tidak tersedia.");
         exit();
     }

@@ -22,9 +22,9 @@ require '../../config/koneksi.php';
         $query .= " AND a.id_kategori = $cat_filter";
     }
     if ($avail_filter === 'Tersedia') {
-        $query .= " AND a.status_ketersediaan = 'Tersedia'";
+        $query .= " AND a.status_ketersediaan IN ('Tersedia', 'Disewa')";
     } elseif ($avail_filter === 'Tidak tersedia') {
-        $query .= " AND a.status_ketersediaan != 'Tersedia'";
+        $query .= " AND a.status_ketersediaan NOT IN ('Tersedia', 'Disewa')";
     }
     if (!empty($_GET['condition'])) {
         $condition = mysqli_real_escape_string($conn, $_GET['condition']);
@@ -101,8 +101,22 @@ require '../../config/koneksi.php';
                     <p class="mb-1"><strong>Kondisi:</strong> <?= htmlspecialchars($data['kondisi_alat']) ?></p>
                     <p class="mb-1"><strong>Harga:</strong> Rp <?= number_format($data['harga'], 0, ',', '.') ?>/hari</p>
                     <p class="mb-3"><strong>Stok:</strong> <?= $data['stok'] ?> Unit</p>
-                    <span class="badge <?= ($data['status_ketersediaan'] === 'Tersedia' && $data['stok'] > 0) ? 'bg-success' : 'bg-danger' ?> mb-3">
-                        <?= ($data['status_ketersediaan'] === 'Tersedia' && $data['stok'] > 0) ? 'Tersedia' : 'Tidak Tersedia' ?>
+                    <?php
+                    $is_bookable = in_array($data['status_ketersediaan'], ['Tersedia', 'Disewa']) && $data['stok'] > 0;
+                    $badge_class = 'bg-danger';
+                    $badge_text = 'Tidak Tersedia';
+                    if ($is_bookable) {
+                        if ($data['status_ketersediaan'] === 'Tersedia') {
+                            $badge_class = 'bg-success';
+                            $badge_text = 'Tersedia';
+                        } else {
+                            $badge_class = 'bg-info';
+                            $badge_text = 'Disewa';
+                        }
+                    }
+                    ?>
+                    <span class="badge <?= $badge_class ?> mb-3">
+                        <?= $badge_text ?>
                     </span>
                     <a href="detail.php?id=<?= $data['id_alat'] ?>" class="btn btn-outline-dark w-100">
                         Lihat Detail

@@ -15,7 +15,7 @@ include '../../includes/header.php';
 $stmt = $pdo->prepare("SELECT a.id_alat, a.nama_alat, a.harga, a.stok, k.nama_kategori 
                        FROM alat_media a 
                        LEFT JOIN kategori k ON a.id_kategori = k.id_kategori 
-                       WHERE a.status_ketersediaan = 'Tersedia' AND a.stok > 0
+                       WHERE a.status_ketersediaan IN ('Tersedia', 'Disewa') AND a.stok > 0
                        ORDER BY k.nama_kategori, a.nama_alat");
 $stmt->execute();
 $items = $stmt->fetchAll(PDO::FETCH_ASSOC);

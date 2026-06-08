@@ -477,14 +477,16 @@ $popular_data_json = json_encode($popular_data);
  ) ?></span>
                                         </td>
                                         <td class="text-end pe-4">
-                                            <a href="detail_reservasi/index.php?id_reserv=<?= $res['id_reserv'] ?>" class="btn btn-sm btn-outline-dark me-1">
-                                                Detail
-                                            </a>
-                                            <?php if ($status === 'Waiting Payment'): ?>
-                                                <a href="<?= BASE_URL ?>modules/admin/pembayaran/verifikasi.php?id_reserv=<?= $res['id_reserv'] ?>" class="btn btn-sm btn-dark">
-                                                    Verify Payment
+                                            <div class="d-flex justify-content-end gap-1 flex-wrap align-items-center">
+                                                <a href="detail_reservasi/index.php?id_reserv=<?= $res['id_reserv'] ?>" class="btn btn-sm btn-outline-dark text-nowrap">
+                                                    Detail
                                                 </a>
-                                            <?php endif; ?>
+                                                <?php if ($status === 'Waiting Payment'): ?>
+                                                    <a href="<?= BASE_URL ?>modules/admin/pembayaran/verifikasi.php?id_reserv=<?= $res['id_reserv'] ?>" class="btn btn-sm btn-dark text-nowrap">
+                                                        Verify Payment
+                                                    </a>
+                                                <?php endif; ?>
+                                            </div>
                                         </td>
                                     </tr>
                                 <?php endwhile; ?>

@@ -6,7 +6,7 @@ include 'includes/header.php';
 $stmt_studio = $pdo->prepare("SELECT a.*, k.nama_kategori 
                               FROM alat_media a 
                               LEFT JOIN kategori k ON a.id_kategori = k.id_kategori 
-                              WHERE k.nama_kategori = 'Studio Kreatif' AND a.status_ketersediaan = 'Tersedia' 
+                              WHERE k.nama_kategori = 'Studio Kreatif' AND a.status_ketersediaan IN ('Tersedia', 'Disewa') 
                               LIMIT 2");
 $stmt_studio->execute();
 $studios = $stmt_studio->fetchAll(PDO::FETCH_ASSOC);
@@ -15,7 +15,7 @@ $studios = $stmt_studio->fetchAll(PDO::FETCH_ASSOC);
 $stmt_alat = $pdo->prepare("SELECT a.*, k.nama_kategori 
                             FROM alat_media a 
                             LEFT JOIN kategori k ON a.id_kategori = k.id_kategori 
-                            WHERE k.nama_kategori != 'Studio Kreatif' AND a.status_ketersediaan = 'Tersedia' 
+                            WHERE k.nama_kategori != 'Studio Kreatif' AND a.status_ketersediaan IN ('Tersedia', 'Disewa') 
                             LIMIT 2");
 $stmt_alat->execute();
 $alats = $stmt_alat->fetchAll(PDO::FETCH_ASSOC);

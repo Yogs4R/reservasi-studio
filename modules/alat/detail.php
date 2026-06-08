@@ -107,7 +107,7 @@ if (strpos($foto, '../../') === 0) {
                         </div>
                         <div class="col-sm-6">
                             <div class="p-3 bg-light rounded d-flex align-items-center gap-3">
-                                <i class="bi bi-check-circle-fill fs-4 <?= $tool['status_ketersediaan'] === 'Tersedia' ? 'text-success' : 'text-danger' ?>"></i>
+                                <i class="bi bi-check-circle-fill fs-4 <?= $tool['status_ketersediaan'] === 'Tersedia' ? 'text-success' : ($tool['status_ketersediaan'] === 'Disewa' ? 'text-info' : 'text-danger') ?>"></i>
                                 <div>
                                     <small class="text-muted d-block text-uppercase" style="font-size: 0.75rem;">Status</small>
                                     <strong class="text-dark fs-5"><?= htmlspecialchars($tool['status_ketersediaan']) ?></strong>
@@ -125,7 +125,7 @@ if (strpos($foto, '../../') === 0) {
                             <span class="fs-2 fw-bold text-dark">Rp <?= number_format($tool['harga'], 0, ',', '.') ?></span>
                         </div>
                         <div>
-                            <?php if ($tool['status_ketersediaan'] === 'Tersedia' && $tool['stok'] > 0): ?>
+                            <?php if (in_array($tool['status_ketersediaan'], ['Tersedia', 'Disewa']) && $tool['stok'] > 0): ?>
                                 <a href="<?= BASE_URL ?>modules/reservasi/form_booking.php?id_alat=<?= $tool['id_alat'] ?>" class="btn btn-dark btn-lg px-5 py-3 fw-bold text-uppercase shadow-sm">
                                     <i class="bi bi-calendar-check me-2"></i> Book Now
                                 </a>
