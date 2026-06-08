@@ -7,7 +7,16 @@ if (session_status() === PHP_SESSION_NONE) {
 
 // Redirect if already logged in
 if (isset($_SESSION['user_id'])) {
-    if ($_SESSION['user_id'] == 1 || strtolower($_SESSION['email'] ?? '') === 'admin@studiohub.com') {
+    // Self-healing session & database role correction for admin
+    if (($_SESSION['user_id'] == 1 || strtolower($_SESSION['email'] ?? '') === 'admin@studiohub.com') && ($_SESSION['role'] ?? '') !== 'admin') {
+        $_SESSION['role'] = 'admin';
+        try {
+            $stmt_fix = $pdo->prepare("UPDATE user SET role = 'admin' WHERE id_user = :id_user");
+            $stmt_fix->execute(['id_user' => $_SESSION['user_id']]);
+        } catch (Exception $e) {}
+    }
+
+    if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
         header("Location: ../admin/index.php");
     } else {
         header("Location: ../../index.php");

@@ -3,6 +3,18 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// Self-healing session & database role correction for admin
+if (isset($_SESSION['user_id']) && ($_SESSION['user_id'] == 1 || strtolower($_SESSION['email'] ?? '') === 'admin@studiohub.com') && ($_SESSION['role'] ?? '') !== 'admin') {
+    $_SESSION['role'] = 'admin';
+    try {
+        if (!isset($pdo)) {
+            require_once dirname(__DIR__) . '/config/koneksi.php';
+        }
+        $stmt_fix = $pdo->prepare("UPDATE user SET role = 'admin' WHERE id_user = :id_user");
+        $stmt_fix->execute(['id_user' => $_SESSION['user_id']]);
+    } catch (Exception $e) {}
+}
+
 // Calculate BASE_URL dynamically to prevent broken links
 $doc_root = str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT']);
 $root_dir = str_replace('\\', '/', dirname(__DIR__));

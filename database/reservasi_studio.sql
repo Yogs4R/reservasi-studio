@@ -181,19 +181,19 @@ CREATE TABLE `user` (
 -- Dumping data untuk tabel `user`
 --
 
-INSERT IGNORE INTO `user` (`id_user`, `nama`, `email`, `id_password`, `no_hp`) VALUES
-(1, 'Admin StudioHub', 'admin@studiohub.com', '$2y$10$tM28Y1Qx7rC8Zz8v2z8yXeC.m9pZ9BwD7qQ1q0lZ3F4z7e9K3p4mK', '081234567890'),
-(2, 'Abyan Santoso', 'abyan@gmail.com', '$2y$10$oXg8D7n9wH1qY6Z.z8z8YeC.m9pZ9BwD7qQ1q0lZ3F4z7e9K3p4mK', '085712345678'),
-(3, 'Ahmad Fauzi', 'ahmad.fauzi@gmail.com', '$2y$10$abcdefghijklmnopqrstuv1234567890abcdefghi', '081234567801'),
-(4, 'Siti Nurhaliza', 'siti.nurhaliza@gmail.com', '$2y$10$bcdefghijklmnopqrstuvw1234567890abcdefghij', '081234567802'),
-(5, 'Budi Santoso', 'budi.santoso@gmail.com', '$2y$10$cdefghijklmnopqrstuvwx1234567890abcdefghijk', '081234567803'),
-(6, 'Dewi Lestari', 'dewi.lestari@gmail.com', '$2y$10$defghijklmnopqrstuvwxy1234567890abcdefghijkl', '081234567804'),
-(7, 'Rizky Pratama', 'rizky.pratama@gmail.com', '$2y$10$efghijklmnopqrstuvwxyz1234567890abcdefghijklm', '081234567805'),
-(8, 'Nabila Putri', 'nabila.putri@gmail.com', '$2y$10$fghijklmnopqrstuvwxyza1234567890abcdefghijklmn', '081234567806'),
-(9, 'Fajar Ramadhan', 'fajar.ramadhan@gmail.com', '$2y$10$ghijklmnopqrstuvwxyzab1234567890abcdefghijklmno', '081234567807'),
-(10, 'Intan Permata', 'intan.permata@gmail.com', '$2y$10$hijklmnopqrstuvwxyzabc1234567890abcdefghijklmnop', '081234567808'),
-(11, 'Dimas Saputra', 'dimas.saputra@gmail.com', '$2y$10$ijklmnopqrstuvwxyzabcd1234567890abcdefghijklmnopq', '081234567809'),
-(12, 'Putri Maharani', 'putri.maharani@gmail.com', '$2y$10$jklmnopqrstuvwxyzabcde1234567890abcdefghijklmnopqr', '081234567810');
+INSERT IGNORE INTO `user` (`id_user`, `nama`, `email`, `id_password`, `no_hp`, `role`) VALUES
+(1, 'Admin StudioHub', 'admin@studiohub.com', '$2y$10$tM28Y1Qx7rC8Zz8v2z8yXeC.m9pZ9BwD7qQ1q0lZ3F4z7e9K3p4mK', '081234567890', 'admin'),
+(2, 'Abyan Santoso', 'abyan@gmail.com', '$2y$10$oXg8D7n9wH1qY6Z.z8z8YeC.m9pZ9BwD7qQ1q0lZ3F4z7e9K3p4mK', '085712345678', 'pelanggan'),
+(3, 'Ahmad Fauzi', 'ahmad.fauzi@gmail.com', '$2y$10$abcdefghijklmnopqrstuv1234567890abcdefghi', '081234567801', 'pelanggan'),
+(4, 'Siti Nurhaliza', 'siti.nurhaliza@gmail.com', '$2y$10$bcdefghijklmnopqrstuvw1234567890abcdefghij', '081234567802', 'pelanggan'),
+(5, 'Budi Santoso', 'budi.santoso@gmail.com', '$2y$10$cdefghijklmnopqrstuvwx1234567890abcdefghijk', '081234567803', 'pelanggan'),
+(6, 'Dewi Lestari', 'dewi.lestari@gmail.com', '$2y$10$defghijklmnopqrstuvwxy1234567890abcdefghijkl', '081234567804', 'pelanggan'),
+(7, 'Rizky Pratama', 'rizky.pratama@gmail.com', '$2y$10$efghijklmnopqrstuvwxyz1234567890abcdefghijklm', '081234567805', 'pelanggan'),
+(8, 'Nabila Putri', 'nabila.putri@gmail.com', '$2y$10$fghijklmnopqrstuvwxyza1234567890abcdefghijklmn', '081234567806', 'pelanggan'),
+(9, 'Fajar Ramadhan', 'fajar.ramadhan@gmail.com', '$2y$10$ghijklmnopqrstuvwxyzab1234567890abcdefghijklmno', '081234567807', 'pelanggan'),
+(10, 'Intan Permata', 'intan.permata@gmail.com', '$2y$10$hijklmnopqrstuvwxyzabc1234567890abcdefghijklmnop', '081234567808', 'pelanggan'),
+(11, 'Dimas Saputra', 'dimas.saputra@gmail.com', '$2y$10$ijklmnopqrstuvwxyzabcd1234567890abcdefghijklmnopq', '081234567809', 'pelanggan'),
+(12, 'Putri Maharani', 'putri.maharani@gmail.com', '$2y$10$jklmnopqrstuvwxyzabcde1234567890abcdefghijklmnopqr', '081234567810', 'pelanggan');
 
 --
 -- Indexes for dumped tables
