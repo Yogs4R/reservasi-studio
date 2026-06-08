@@ -10,7 +10,6 @@
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
-SET FOREIGN_KEY_CHECKS = 0;
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -22,6 +21,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 --
 CREATE DATABASE IF NOT EXISTS `reservasi_studio`;
 USE `reservasi_studio`;
+SET FOREIGN_KEY_CHECKS = 0;
 
 -- --------------------------------------------------------
 
