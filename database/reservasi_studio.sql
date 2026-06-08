@@ -315,3 +315,11 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+-- =========================================================================
+-- MIGRASI: JALANKAN PERINTAH DI BAWAH INI JIKA DATABASE SUDAH DI-IMPORT SEBELUMNYA:
+-- =========================================================================
+-- ALTER TABLE `user` ADD COLUMN `role` ENUM('admin', 'pelanggan') DEFAULT 'pelanggan' AFTER `id_password`;
+-- UPDATE `user` SET `role` = 'admin' WHERE `id_user` = 1;
+-- =========================================================================
+
