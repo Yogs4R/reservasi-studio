@@ -3,14 +3,14 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 05 Jun 2026 pada 17.49
+-- Waktu pembuatan: 08 Jun 2026 pada 12.55
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
-
+SET FOREIGN_KEY_CHECKS = 0;
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -20,6 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `reservasi_studio`
 --
+CREATE DATABASE IF NOT EXISTS `reservasi_studio`;
+USE `reservasi_studio`;
 
 -- --------------------------------------------------------
 
@@ -27,6 +29,7 @@ SET time_zone = "+00:00";
 -- Struktur dari tabel `alat_media`
 --
 
+DROP TABLE IF EXISTS `alat_media`;
 CREATE TABLE IF NOT EXISTS `alat_media` (
   `id_alat` int(11) NOT NULL,
   `nama_alat` varchar(100) NOT NULL,
@@ -72,6 +75,7 @@ INSERT IGNORE INTO `alat_media` (`id_alat`, `nama_alat`, `desc_alat`, `id_katego
 -- Struktur dari tabel `detail_reservasi`
 --
 
+DROP TABLE IF EXISTS `detail_reservasi`;
 CREATE TABLE IF NOT EXISTS `detail_reservasi` (
   `id_detail` int(11) NOT NULL,
   `id_reserv` int(11) DEFAULT NULL,
@@ -94,6 +98,7 @@ INSERT IGNORE INTO `detail_reservasi` (`id_detail`, `id_reserv`, `id_alat`, `jum
 -- Struktur dari tabel `kategori`
 --
 
+DROP TABLE IF EXISTS `kategori`;
 CREATE TABLE IF NOT EXISTS `kategori` (
   `id_kategori` int(11) NOT NULL,
   `nama_kategori` varchar(100) NOT NULL,
@@ -122,6 +127,7 @@ INSERT IGNORE INTO `kategori` (`id_kategori`, `nama_kategori`, `desc_kategori`) 
 -- Struktur dari tabel `pembayaran`
 --
 
+DROP TABLE IF EXISTS `pembayaran`;
 CREATE TABLE IF NOT EXISTS `pembayaran` (
   `id_pembayaran` int(11) NOT NULL,
   `id_reserv` int(11) DEFAULT NULL,
@@ -144,6 +150,7 @@ INSERT IGNORE INTO `pembayaran` (`id_pembayaran`, `id_reserv`, `tgl_pembayaran`,
 -- Struktur dari tabel `reservasi`
 --
 
+DROP TABLE IF EXISTS `reservasi`;
 CREATE TABLE IF NOT EXISTS `reservasi` (
   `id_reserv` int(11) NOT NULL,
   `id_user` int(11) DEFAULT NULL,
@@ -168,6 +175,7 @@ INSERT IGNORE INTO `reservasi` (`id_reserv`, `id_user`, `tgl_reserv`, `tgl_mulai
 -- Struktur dari tabel `user`
 --
 
+DROP TABLE IF EXISTS `user`;
 CREATE TABLE IF NOT EXISTS `user` (
   `id_user` int(11) NOT NULL,
   `nama` varchar(100) NOT NULL,
@@ -280,7 +288,7 @@ ALTER TABLE `reservasi`
 -- AUTO_INCREMENT untuk tabel `user`
 --
 ALTER TABLE `user`
-  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
@@ -310,6 +318,7 @@ ALTER TABLE `pembayaran`
 --
 ALTER TABLE `reservasi`
   ADD CONSTRAINT `reservasi_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`) ON DELETE CASCADE ON UPDATE CASCADE;
+SET FOREIGN_KEY_CHECKS = 1;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
@@ -322,4 +331,3 @@ COMMIT;
 -- ALTER TABLE `user` ADD COLUMN `role` ENUM('admin', 'pelanggan') DEFAULT 'pelanggan' AFTER `id_password`;
 -- UPDATE `user` SET `role` = 'admin' WHERE `id_user` = 1;
 -- =========================================================================
-
