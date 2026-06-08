@@ -3,6 +3,7 @@ node_modules/
 .vscode/
 .DS_Store
 !assets/img/uploads/.gitkeep
+assets/img/uploads/bukti/*
 _bmad/
 _bmad-output/
 .agent/
