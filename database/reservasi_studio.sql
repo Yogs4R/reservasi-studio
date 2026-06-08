@@ -3,13 +3,14 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 08 Jun 2026 pada 12.55
+-- Waktu pembuatan: 08 Jun 2026 pada 07.59
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -19,9 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `reservasi_studio`
 --
-CREATE DATABASE IF NOT EXISTS `reservasi_studio`;
-USE `reservasi_studio`;
-SET FOREIGN_KEY_CHECKS = 0;
 
 -- --------------------------------------------------------
 
@@ -29,8 +27,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- Struktur dari tabel `alat_media`
 --
 
-DROP TABLE IF EXISTS `alat_media`;
-CREATE TABLE IF NOT EXISTS `alat_media` (
+CREATE TABLE `alat_media` (
   `id_alat` int(11) NOT NULL,
   `nama_alat` varchar(100) NOT NULL,
   `desc_alat` text DEFAULT NULL,
@@ -46,7 +43,7 @@ CREATE TABLE IF NOT EXISTS `alat_media` (
 -- Dumping data untuk tabel `alat_media`
 --
 
-INSERT IGNORE INTO `alat_media` (`id_alat`, `nama_alat`, `desc_alat`, `id_kategori`, `harga`, `stok`, `kondisi_alat`, `foto_alat`, `status_ketersediaan`) VALUES
+INSERT INTO `alat_media` (`id_alat`, `nama_alat`, `desc_alat`, `id_kategori`, `harga`, `stok`, `kondisi_alat`, `foto_alat`, `status_ketersediaan`) VALUES
 (1, 'Canon EOS R50', 'Kamera mirrorless 24.2MP cocok untuk fotografi produk dan konten sosial media.', 1, 150000.00, 3, 'Baik', '../../assets/img/uploads/Canon EOS R50.png', 'Tersedia'),
 (2, 'Sony A6400', 'Kamera mirrorless dengan autofocus real-time tracking.', 1, 180000.00, 2, 'Baik', '../../assets/img/uploads/Sony A6400.png', 'Tersedia'),
 (3, 'Sony FX30', 'Cinema camera profesional untuk produksi video berkualitas tinggi.', 2, 450000.00, 1, 'Baik', '../../assets/img/uploads/Sony FX30.png', 'Tersedia'),
@@ -55,7 +52,6 @@ INSERT IGNORE INTO `alat_media` (`id_alat`, `nama_alat`, `desc_alat`, `id_katego
 (6, 'Rodecaster Pro II', 'Mixer podcast profesional dengan fitur recording terintegrasi.', 3, 200000.00, 1, 'Baik', '../../assets/img/uploads/Rodecaster Pro II.png', 'Disewa'),
 (7, 'Studio Podcast A', 'Ruangan podcast kapasitas 4 orang lengkap dengan peredam suara.', 4, 250000.00, 1, 'Baik', '../../assets/img/uploads/Studio Podcast A.png', 'Tersedia'),
 (8, 'Studio Foto White Room', 'Studio foto profesional dengan background putih dan lighting lengkap.', 4, 300000.00, 1, 'Baik', '../../assets/img/uploads/Studio Foto White Room.png', 'Tersedia'),
--- Elgato Stream Deck MK2 description says 'livestream dan content creator.' or 'livestream and content creator.' Let's use 'livestream dan content creator.'
 (9, 'Elgato Stream Deck MK2', 'Perangkat shortcut khusus livestream dan content creator.', 5, 40000.00, 3, 'Baik', '../../assets/img/uploads/Elgato Stream Deck MK2.png', 'Tersedia'),
 (10, 'Logitech Brio 4K', 'Webcam profesional resolusi 4K untuk meeting dan streaming.', 5, 60000.00, 4, 'Baik', '../../assets/img/uploads/Logitech Brio 4K.png', 'Tersedia'),
 (11, 'Focusrite Scarlett 2i2', 'Audio interface USB untuk recording profesional.', 6, 75000.00, 3, 'Baik', '../../assets/img/uploads/Focusrite Scarlett 2i2.png', 'Tersedia'),
@@ -75,8 +71,7 @@ INSERT IGNORE INTO `alat_media` (`id_alat`, `nama_alat`, `desc_alat`, `id_katego
 -- Struktur dari tabel `detail_reservasi`
 --
 
-DROP TABLE IF EXISTS `detail_reservasi`;
-CREATE TABLE IF NOT EXISTS `detail_reservasi` (
+CREATE TABLE `detail_reservasi` (
   `id_detail` int(11) NOT NULL,
   `id_reserv` int(11) DEFAULT NULL,
   `id_alat` int(11) DEFAULT NULL,
@@ -89,8 +84,11 @@ CREATE TABLE IF NOT EXISTS `detail_reservasi` (
 -- Dumping data untuk tabel `detail_reservasi`
 --
 
-INSERT IGNORE INTO `detail_reservasi` (`id_detail`, `id_reserv`, `id_alat`, `jumlah`, `harga_satuan`, `subtotal`) VALUES
-(1, 1, 2, 1, 180000.00, 1440000.00);
+INSERT INTO `detail_reservasi` (`id_detail`, `id_reserv`, `id_alat`, `jumlah`, `harga_satuan`, `subtotal`) VALUES
+(1, 1, 2, 1, 180000.00, 1440000.00),
+(3, 3, 3, 1, 450000.00, 900000.00),
+(4, 4, 3, 1, 450000.00, 450000.00),
+(5, 5, 2, 1, 180000.00, 180000.00);
 
 -- --------------------------------------------------------
 
@@ -98,8 +96,7 @@ INSERT IGNORE INTO `detail_reservasi` (`id_detail`, `id_reserv`, `id_alat`, `jum
 -- Struktur dari tabel `kategori`
 --
 
-DROP TABLE IF EXISTS `kategori`;
-CREATE TABLE IF NOT EXISTS `kategori` (
+CREATE TABLE `kategori` (
   `id_kategori` int(11) NOT NULL,
   `nama_kategori` varchar(100) NOT NULL,
   `desc_kategori` text DEFAULT NULL
@@ -109,7 +106,7 @@ CREATE TABLE IF NOT EXISTS `kategori` (
 -- Dumping data untuk tabel `kategori`
 --
 
-INSERT IGNORE INTO `kategori` (`id_kategori`, `nama_kategori`, `desc_kategori`) VALUES
+INSERT INTO `kategori` (`id_kategori`, `nama_kategori`, `desc_kategori`) VALUES
 (1, 'Fotografi', 'Kategori peralatan fotografi seperti kamera, lensa, tripod, lighting, dan aksesoris pendukung pemotretan.'),
 (2, 'Videografi', 'Kategori peralatan produksi video seperti kamera cinema, gimbal, drone, teleprompter, dan lighting video.'),
 (3, 'Podcast', 'Kategori peralatan audio dan podcast seperti mikrofon, mixer, audio interface, headphone monitoring, dan perangkat recording.'),
@@ -127,8 +124,7 @@ INSERT IGNORE INTO `kategori` (`id_kategori`, `nama_kategori`, `desc_kategori`) 
 -- Struktur dari tabel `pembayaran`
 --
 
-DROP TABLE IF EXISTS `pembayaran`;
-CREATE TABLE IF NOT EXISTS `pembayaran` (
+CREATE TABLE `pembayaran` (
   `id_pembayaran` int(11) NOT NULL,
   `id_reserv` int(11) DEFAULT NULL,
   `tgl_pembayaran` datetime NOT NULL,
@@ -141,8 +137,11 @@ CREATE TABLE IF NOT EXISTS `pembayaran` (
 -- Dumping data untuk tabel `pembayaran`
 --
 
-INSERT IGNORE INTO `pembayaran` (`id_pembayaran`, `id_reserv`, `tgl_pembayaran`, `jml_pembayaran`, `bukti_pembayaran`, `kode_transaksi`) VALUES
-(1, 1, '2026-06-08 01:21:13', 1440000.00, 'bukti_1_1780856473.png', 'TRX20260607000163');
+INSERT INTO `pembayaran` (`id_pembayaran`, `id_reserv`, `tgl_pembayaran`, `jml_pembayaran`, `bukti_pembayaran`, `kode_transaksi`) VALUES
+(1, 1, '2026-06-08 01:21:13', 1440000.00, 'bukti_1_1780856473.png', 'TRX20260607000163'),
+(3, 3, '2026-06-08 12:00:23', 900000.00, 'bukti_3_1780894823.png', 'TRX20260608000359'),
+(4, 4, '2026-06-08 12:02:36', 450000.00, 'bukti_4_1780894956.png', 'TRX20260608000411'),
+(5, 5, '2026-06-08 12:04:11', 180000.00, 'bukti_5_1780895051.png', 'TRX20260608000532');
 
 -- --------------------------------------------------------
 
@@ -150,8 +149,7 @@ INSERT IGNORE INTO `pembayaran` (`id_pembayaran`, `id_reserv`, `tgl_pembayaran`,
 -- Struktur dari tabel `reservasi`
 --
 
-DROP TABLE IF EXISTS `reservasi`;
-CREATE TABLE IF NOT EXISTS `reservasi` (
+CREATE TABLE `reservasi` (
   `id_reserv` int(11) NOT NULL,
   `id_user` int(11) DEFAULT NULL,
   `tgl_reserv` datetime NOT NULL,
@@ -166,8 +164,11 @@ CREATE TABLE IF NOT EXISTS `reservasi` (
 -- Dumping data untuk tabel `reservasi`
 --
 
-INSERT IGNORE INTO `reservasi` (`id_reserv`, `id_user`, `tgl_reserv`, `tgl_mulai`, `tgl_selesai`, `status_reserv`, `harga_total`, `metode_pembayaran`) VALUES
-(1, 2, '2026-06-08 01:20:02', '2026-06-15', '2026-06-22', 'Booked', 1440000.00, 'Transfer Bank Mandiri');
+INSERT INTO `reservasi` (`id_reserv`, `id_user`, `tgl_reserv`, `tgl_mulai`, `tgl_selesai`, `status_reserv`, `harga_total`, `metode_pembayaran`) VALUES
+(1, 2, '2026-06-08 01:20:02', '2026-06-15', '2026-06-22', 'Booked', 1440000.00, 'Transfer Bank Mandiri'),
+(3, 1, '2026-06-08 12:00:09', '2026-06-09', '2026-06-10', 'Booked', 900000.00, 'Transfer Bank Mandiri'),
+(4, 1, '2026-06-08 12:02:24', '2026-06-08', '2026-06-08', 'Booked', 450000.00, 'Transfer Bank Mandiri'),
+(5, 1, '2026-06-08 12:03:58', '2026-06-08', '2026-06-08', 'Booked', 180000.00, 'Transfer Bank Mandiri');
 
 -- --------------------------------------------------------
 
@@ -175,33 +176,22 @@ INSERT IGNORE INTO `reservasi` (`id_reserv`, `id_user`, `tgl_reserv`, `tgl_mulai
 -- Struktur dari tabel `user`
 --
 
-DROP TABLE IF EXISTS `user`;
-CREATE TABLE IF NOT EXISTS `user` (
+CREATE TABLE `user` (
   `id_user` int(11) NOT NULL,
   `nama` varchar(100) NOT NULL,
   `email` varchar(100) NOT NULL,
   `id_password` varchar(255) NOT NULL,
-  `no_hp` varchar(20) DEFAULT NULL,
-  `role` enum('admin','pelanggan') DEFAULT 'pelanggan'
+  `no_hp` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data untuk tabel `user`
 --
 
-INSERT IGNORE INTO `user` (`id_user`, `nama`, `email`, `id_password`, `no_hp`, `role`) VALUES
-(1, 'Admin StudioHub', 'admin@studiohub.com', '$2y$10$tM28Y1Qx7rC8Zz8v2z8yXeC.m9pZ9BwD7qQ1q0lZ3F4z7e9K3p4mK', '081234567890', 'admin'),
-(2, 'Abyan Santoso', 'abyan@gmail.com', '$2y$10$oXg8D7n9wH1qY6Z.z8z8YeC.m9pZ9BwD7qQ1q0lZ3F4z7e9K3p4mK', '085712345678', 'pelanggan'),
-(3, 'Ahmad Fauzi', 'ahmad.fauzi@gmail.com', '$2y$10$abcdefghijklmnopqrstuv1234567890abcdefghi', '081234567801', 'pelanggan'),
-(4, 'Siti Nurhaliza', 'siti.nurhaliza@gmail.com', '$2y$10$bcdefghijklmnopqrstuvw1234567890abcdefghij', '081234567802', 'pelanggan'),
-(5, 'Budi Santoso', 'budi.santoso@gmail.com', '$2y$10$cdefghijklmnopqrstuvwx1234567890abcdefghijk', '081234567803', 'pelanggan'),
-(6, 'Dewi Lestari', 'dewi.lestari@gmail.com', '$2y$10$defghijklmnopqrstuvwxy1234567890abcdefghijkl', '081234567804', 'pelanggan'),
-(7, 'Rizky Pratama', 'rizky.pratama@gmail.com', '$2y$10$efghijklmnopqrstuvwxyz1234567890abcdefghijklm', '081234567805', 'pelanggan'),
-(8, 'Nabila Putri', 'nabila.putri@gmail.com', '$2y$10$fghijklmnopqrstuvwxyza1234567890abcdefghijklmn', '081234567806', 'pelanggan'),
-(9, 'Fajar Ramadhan', 'fajar.ramadhan@gmail.com', '$2y$10$ghijklmnopqrstuvwxyzab1234567890abcdefghijklmno', '081234567807', 'pelanggan'),
-(10, 'Intan Permata', 'intan.permata@gmail.com', '$2y$10$hijklmnopqrstuvwxyzabc1234567890abcdefghijklmnop', '081234567808', 'pelanggan'),
-(11, 'Dimas Saputra', 'dimas.saputra@gmail.com', '$2y$10$ijklmnopqrstuvwxyzabcd1234567890abcdefghijklmnopq', '081234567809', 'pelanggan'),
-(12, 'Putri Maharani', 'putri.maharani@gmail.com', '$2y$10$jklmnopqrstuvwxyzabcde1234567890abcdefghijklmnopqr', '081234567810', 'pelanggan');
+INSERT INTO `user` (`id_user`, `nama`, `email`, `id_password`, `no_hp`) VALUES
+(1, 'Admin StudioHub', 'admin@studiohub.com', '$2y$10$tM28Y1Qx7rC8Zz8v2z8yXeC.m9pZ9BwD7qQ1q0lZ3F4z7e9K3p4mK', '081234567890'),
+(2, 'Abyan Santoso', 'abyan@gmail.com', '$2y$10$oXg8D7n9wH1qY6Z.z8z8YeC.m9pZ9BwD7qQ1q0lZ3F4z7e9K3p4mK', '085712345678'),
+(3, 'Lionel Ronaldo', 'lionelronaldo@gmail.com', '$2y$10$DuTkhN5n6a28rgV8x8YpMuTo5sVaYEMsM3cRoFASqdkWmN3O63j.m', NULL);
 
 --
 -- Indexes for dumped tables
@@ -264,7 +254,7 @@ ALTER TABLE `alat_media`
 -- AUTO_INCREMENT untuk tabel `detail_reservasi`
 --
 ALTER TABLE `detail_reservasi`
-  MODIFY `id_detail` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_detail` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT untuk tabel `kategori`
@@ -276,19 +266,19 @@ ALTER TABLE `kategori`
 -- AUTO_INCREMENT untuk tabel `pembayaran`
 --
 ALTER TABLE `pembayaran`
-  MODIFY `id_pembayaran` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_pembayaran` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT untuk tabel `reservasi`
 --
 ALTER TABLE `reservasi`
-  MODIFY `id_reserv` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_reserv` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT untuk tabel `user`
 --
 ALTER TABLE `user`
-  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
@@ -318,16 +308,8 @@ ALTER TABLE `pembayaran`
 --
 ALTER TABLE `reservasi`
   ADD CONSTRAINT `reservasi_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`) ON DELETE CASCADE ON UPDATE CASCADE;
-SET FOREIGN_KEY_CHECKS = 1;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
--- =========================================================================
--- MIGRASI: JALANKAN PERINTAH DI BAWAH INI JIKA DATABASE SUDAH DI-IMPORT SEBELUMNYA:
--- =========================================================================
--- ALTER TABLE `user` ADD COLUMN `role` ENUM('admin', 'pelanggan') DEFAULT 'pelanggan' AFTER `id_password`;
--- UPDATE `user` SET `role` = 'admin' WHERE `id_user` = 1;
--- =========================================================================
