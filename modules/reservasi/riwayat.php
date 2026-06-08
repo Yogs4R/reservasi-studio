@@ -5,10 +5,10 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Check login session (fallback to mock user)
+// Check login session (redirect if not logged in)
 if (!isset($_SESSION['user_id'])) {
-    $_SESSION['user_id'] = 2;
-    $_SESSION['nama'] = 'Abyan Santoso';
+    header("Location: ../auth/login.php?redirect=" . urlencode($_SERVER['REQUEST_URI']));
+    exit();
 }
 
 include '../../includes/header.php';

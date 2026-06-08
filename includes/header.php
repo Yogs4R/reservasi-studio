@@ -65,6 +65,9 @@ if (!defined('BASE_URL')) {
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="userDropdown">
                                 <li><a class="dropdown-menu-item dropdown-item fw-medium py-2" href="<?= BASE_URL ?>modules/reservasi/riwayat.php">My Bookings</a></li>
+                                <?php if (isset($_SESSION['user_id']) && ($_SESSION['user_id'] == 1 || strtolower($_SESSION['email'] ?? '') === 'admin@studiohub.com')): ?>
+                                    <li><a class="dropdown-menu-item dropdown-item fw-semibold text-primary py-2" href="<?= BASE_URL ?>modules/admin/index.php"><i class="bi bi-shield-lock me-1"></i>Admin Panel</a></li>
+                                <?php endif; ?>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-menu-item dropdown-item text-danger fw-semibold py-2" href="<?= BASE_URL ?>modules/auth/logout.php">Logout</a></li>
                             </ul>

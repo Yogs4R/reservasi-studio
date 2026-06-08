@@ -1,20 +1,20 @@
 <?php
-require_once '../../config/koneksi.php';
+require_once '../../../config/koneksi.php';
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Simulate login session if not set (admin default is user ID 1)
+// Ensure user is logged in
 if (!isset($_SESSION['user_id'])) {
-    $_SESSION['user_id'] = 1;
-    $_SESSION['nama'] = 'Admin StudioHub';
+    header("Location: ../../auth/login.php?redirect=" . urlencode($_SERVER['REQUEST_URI']));
+    exit();
 }
 
 $id_reserv = isset($_GET['id_reserv']) ? intval($_GET['id_reserv']) : 0;
 
 if ($id_reserv <= 0) {
-    header("Location: ../admin/reservasi/index.php");
+    header("Location: ../reservasi/index.php");
     exit();
 }
 
@@ -33,7 +33,7 @@ $stmt->execute(['id_reserv' => $id_reserv]);
 $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$data) {
-    header("Location: ../admin/reservasi/index.php?status=error&message=" . urlencode("Reservasi tidak ditemukan."));
+    header("Location: ../reservasi/index.php?status=error&message=" . urlencode("Reservasi tidak ditemukan."));
     exit();
 }
 
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt_update->execute(['id_reserv' => $id_reserv]);
             
             $pdo->commit();
-            header("Location: ../admin/reservasi/index.php?status=success&message=" . urlencode("Reservasi #" . $id_reserv . " berhasil disetujui (Booked)."));
+            header("Location: ../reservasi/index.php?status=success&message=" . urlencode("Reservasi #" . $id_reserv . " berhasil disetujui (Booked)."));
             exit();
         } catch (Exception $e) {
             $pdo->rollBack();
@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt_update->execute(['id_reserv' => $id_reserv]);
             
             $pdo->commit();
-            header("Location: ../admin/reservasi/index.php?status=success&message=" . urlencode("Reservasi #" . $id_reserv . " berhasil ditolak (Cancelled)."));
+            header("Location: ../reservasi/index.php?status=success&message=" . urlencode("Reservasi #" . $id_reserv . " berhasil ditolak (Cancelled)."));
             exit();
         } catch (Exception $e) {
             $pdo->rollBack();
@@ -84,7 +84,7 @@ foreach ($tables as $t) {
     $table_sizes[$t] = mysqli_fetch_assoc($size_q)['total'] ?? 0;
 }
 
-include '../../includes/header_admin.php';
+include '../../../includes/header_admin.php';
 ?>
 
 <div class="pt-5 pb-4">
@@ -93,8 +93,8 @@ include '../../includes/header_admin.php';
         <div>
             <nav aria-label="breadcrumb" class="mb-1">
                 <ol class="breadcrumb mb-0">
-                    <li class="breadcrumb-item"><a href="../admin/index.php" class="text-decoration-none text-muted small">Admin</a></li>
-                    <li class="breadcrumb-item"><a href="../admin/reservasi/index.php" class="text-decoration-none text-muted small">Reservasi</a></li>
+                    <li class="breadcrumb-item"><a href="../index.php" class="text-decoration-none text-muted small">Admin</a></li>
+                    <li class="breadcrumb-item"><a href="../reservasi/index.php" class="text-decoration-none text-muted small">Reservasi</a></li>
                     <li class="breadcrumb-item active text-dark fw-semibold small" aria-current="page">Verifikasi Pembayaran</li>
                 </ol>
             </nav>
@@ -121,7 +121,7 @@ include '../../includes/header_admin.php';
     <div class="row g-4">
         <!-- Left Sidebar Navigation Column -->
         <div class="col-lg-3">
-            <?php include '../../includes/sidebar_admin.php'; ?>
+            <?php include '../../../includes/sidebar_admin.php'; ?>
             
             <!-- Database Size Tracker Card -->
             <div class="card shadow-sm border border-light-subtle rounded-3 p-3 mt-4 bg-white">
@@ -226,7 +226,7 @@ include '../../includes/header_admin.php';
                                     Pemesanan ini sudah berstatus <strong><?= htmlspecialchars($data['status_reserv']) ?></strong>. Tidak diperlukan tindakan verifikasi lebih lanjut.
                                 </div>
                             <?php endif; ?>
-                            <a href="../admin/reservasi/index.php" class="btn btn-link text-muted text-decoration-none d-block mt-3 small">
+                            <a href="../reservasi/index.php" class="btn btn-link text-muted text-decoration-none d-block mt-3 small">
                                 Kembali ke Daftar Reservasi
                             </a>
                         </div>
@@ -256,8 +256,8 @@ include '../../includes/header_admin.php';
 
                                 <small class="text-muted d-block mb-2 text-uppercase fw-semibold" style="font-size: 0.75rem;">Struk / Gambar Bukti:</small>
                                 <div class="flex-grow-1 d-flex align-items-center justify-content-center border rounded-3 p-3 bg-light overflow-hidden position-relative" style="min-height: 250px;">
-                                    <?php if ($data['bukti_pembayaran'] && file_exists('../../assets/img/uploads/' . $data['bukti_pembayaran'])): ?>
-                                        <img src="../../assets/img/uploads/<?= htmlspecialchars($data['bukti_pembayaran']) ?>" alt="Bukti Pembayaran" class="img-fluid rounded shadow-sm" style="max-height: 400px; object-fit: contain;">
+                                    <?php if ($data['bukti_pembayaran'] && file_exists('../../../assets/img/uploads/' . $data['bukti_pembayaran'])): ?>
+                                        <img src="../../../assets/img/uploads/<?= htmlspecialchars($data['bukti_pembayaran']) ?>" alt="Bukti Pembayaran" class="img-fluid rounded shadow-sm" style="max-height: 400px; object-fit: contain;">
                                     <?php else: ?>
                                         <div class="text-center text-muted">
                                             <i class="bi bi-image-fill fs-1 d-block mb-2 text-secondary"></i>
@@ -281,5 +281,5 @@ include '../../includes/header_admin.php';
 </div>
 
 <?php
-include '../../includes/footer_admin.php';
+include '../../../includes/footer_admin.php';
 ?>

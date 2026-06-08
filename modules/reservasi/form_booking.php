@@ -1,13 +1,12 @@
 <?php
 require_once '../../config/koneksi.php';
 
-// Inisiasi session login simulasi jika belum ada
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 if (!isset($_SESSION['user_id'])) {
-    $_SESSION['user_id'] = 2;
-    $_SESSION['nama'] = 'Abyan Santoso';
+    header("Location: ../auth/login.php?redirect=" . urlencode($_SERVER['REQUEST_URI']));
+    exit();
 }
 
 include '../../includes/header.php';

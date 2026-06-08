@@ -1,15 +1,14 @@
 <?php
 require_once '../../config/koneksi.php';
 
-// Inisiasi session login jika belum ada
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Redirect jika belum login (fallback login simulasi jika kosong)
+// Redirect if not logged in
 if (!isset($_SESSION['user_id'])) {
-    $_SESSION['user_id'] = 2;
-    $_SESSION['nama'] = 'Abyan Santoso';
+    header("Location: ../auth/login.php");
+    exit();
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
