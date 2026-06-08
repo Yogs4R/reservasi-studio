@@ -5,10 +5,10 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Fallback login simulasi jika kosong
+// Check login session (redirect if not logged in)
 if (!isset($_SESSION['user_id'])) {
-    $_SESSION['user_id'] = 2;
-    $_SESSION['nama'] = 'Abyan Santoso';
+    header("Location: ../auth/login.php?redirect=" . urlencode($_SERVER['REQUEST_URI']));
+    exit();
 }
 
 $id_reserv = isset($_GET['id_reserv']) ? intval($_GET['id_reserv']) : 0;

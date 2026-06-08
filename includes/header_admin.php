@@ -25,6 +25,12 @@ if ($base_url === '//') {
 if (!defined('BASE_URL')) {
     define('BASE_URL', $base_url);
 }
+
+// Access Control check: Require admin login
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+    header("Location: " . BASE_URL . "modules/auth/login.php?redirect=" . urlencode($_SERVER['REQUEST_URI']));
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">

@@ -145,7 +145,7 @@ foreach ($tables as $t) {
                                     </td>
                                     <td>
                                         <div class="d-flex gap-1">
-                                            <a href="<?= BASE_URL ?>modules/pembayaran/verifikasi.php?id_reserv=<?= $data['id_reserv'] ?>" class="btn <?= $status === 'Waiting Payment' ? 'btn-dark' : 'btn-outline-secondary' ?> btn-sm text-nowrap fw-bold" style="font-size: 0.75rem;">
+                                            <a href="<?= BASE_URL ?>modules/admin/pembayaran/verifikasi.php?id_reserv=<?= $data['id_reserv'] ?>" class="btn <?= $status === 'Waiting Payment' ? 'btn-dark' : 'btn-outline-secondary' ?> btn-sm text-nowrap fw-bold" style="font-size: 0.75rem;">
                                                 <i class="bi bi-shield-check me-1"></i><?= $status === 'Waiting Payment' ? 'Verify' : 'Detail' ?>
                                             </a>
                                         </div>

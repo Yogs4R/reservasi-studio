@@ -139,7 +139,7 @@ foreach ($tables as $t) {
                                     <td>
                                         <div class="d-flex gap-1">
                                             <?php if ($status === 'Waiting Payment'): ?>
-                                                <a href="<?= BASE_URL ?>modules/pembayaran/verifikasi.php?id_reserv=<?= $data['id_reserv'] ?>" class="btn btn-dark btn-sm fw-bold px-2" title="Verify Payment" style="font-size: 0.75rem;">
+                                                <a href="<?= BASE_URL ?>modules/admin/pembayaran/verifikasi.php?id_reserv=<?= $data['id_reserv'] ?>" class="btn btn-dark btn-sm fw-bold px-2" title="Verify Payment" style="font-size: 0.75rem;">
                                                     <i class="bi bi-shield-check me-1"></i>Verify
                                                 </a>
                                             <?php endif; ?>
